@@ -1,0 +1,41 @@
+#login {
+	width: 400px;
+	height: 230px;
+	margin: calc(50vh - 115px) calc(50vw - 200px);
+	background: #fff;
+	position: relative;
+}
+
+#login header{
+	font-size: 2em;
+	padding: 20px;
+	text-align: center;
+}
+
+#login p{
+	padding: 0 20px;
+	margin: 0 0 20px;
+}
+
+#login label{
+	display: inline-block;
+	width: 100px;
+}
+
+#login input{
+	width: calc(100% - 100px);
+	padding: 5px;
+}
+
+#login button{
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	padding: 10px;
+	color: #fff;
+	background: tomato;
+}
+
+body{
+	background: #222;
+}

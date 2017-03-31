@@ -1,0 +1,55 @@
+body{
+	background: #eee;
+}
+
+nav{
+	position: fixed;
+	width: 100%;
+	background: #222;
+	color: #fff;
+}
+
+nav .nav-toggle{
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+}
+
+nav ul, #tabs{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+nav li, #tabs li{
+	display: inline-block;
+}
+
+nav li a{
+	display: block;
+}
+
+nav li a, #tabs li{
+	padding: 10px 20px;
+}
+
+#tabs{
+	margin-top: 50px;
+	display: inline-block;
+	width: 100%;
+}
+
+#mikrotik table{
+	width: 100%;
+}
+
+#tabs li{
+	cursor: pointer;
+}
+
+@media max-width(460px){
+	nav .nav-toggle{
+		display: block;
+	}
+}
