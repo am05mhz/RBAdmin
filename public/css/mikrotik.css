@@ -48,6 +48,11 @@ nav li a, #tabs li{
 	cursor: pointer;
 }
 
+#tabs li.active{
+	color: #fff;
+	background: #2196f3;
+}
+
 @media max-width(460px){
 	nav .nav-toggle{
 		display: block;

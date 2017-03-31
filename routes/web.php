@@ -16,6 +16,8 @@ $app->get('/login', ['as' => 'login', 'uses' => 'Login@index']);
 $app->get('/logout', ['as' => 'logout', 'uses' => 'Login@logout']);
 
 $app->get('/boards', 'Mikrotik@boards');
+$app->get('/address-list-names', 'Mikrotik@address_list_names');
+$app->get('/mac-addresses', 'Mikrotik@mac_addresses');
 
 $app->get('/urls', ['as' => 'urls', 'uses' => 'Mikrotik@urls']);
 

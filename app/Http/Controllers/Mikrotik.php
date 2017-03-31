@@ -36,6 +36,14 @@ class Mikrotik extends Controller
 		return ['boards' => \App\Board::all()];
 	}
 	
+	public function address_list_names(){
+		return ['names' => \App\AddressListName::all()];
+	}
+	
+	public function mac_addresses(){
+		return ['macs' => \App\MacAddress::all()];
+	}
+	
 	public function urls(){
 		$urls = 'var navigation = ['
 			. '{url:"' . url('/') . '", label:"Home"},' . 

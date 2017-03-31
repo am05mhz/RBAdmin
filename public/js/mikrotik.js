@@ -3,7 +3,7 @@ docReady(function(){
 		el: '#app',
 		data: {
 			navigation: [],
-			tabs: ['Router Boards', 'Filters', 'Address List'],
+			tabs: ['Router Boards', 'Address List Names', 'MAC Addresses'],
 			activeTab: 0,
 			items: [],
 		},
@@ -32,6 +32,38 @@ docReady(function(){
 					
 				})
 			},
+			loadAddressListNames: function(){
+				var _self = this;
+				errand({
+					url: 'address-list-names',
+					json: true,
+					method: 'get'
+				}).success(function(resp){
+					if (resp.names){
+						_self.$set(_self, 'items', resp.names);
+					} else {
+						_self.$set(_self, 'items', []);
+					}
+				}).error(function(resp){
+					
+				})
+			},
+			loadMacAddresses: function(){
+				var _self = this;
+				errand({
+					url: 'mac-addresses',
+					json: true,
+					method: 'get'
+				}).success(function(resp){
+					if (resp.macs){
+						_self.$set(_self, 'items', resp.macs);
+					} else {
+						_self.$set(_self, 'items', []);
+					}
+				}).error(function(resp){
+					
+				})
+			},
 			tabClick: function(tab){
 				this.items = [];
 				this.activeTab = this.tabs.indexOf(tab);
@@ -41,8 +73,10 @@ docReady(function(){
 						this.loadBoards();
 						break;
 					case 1:
+						this.loadAddressListNames();
 						break;
 					case 2:
+						this.loadMacAddresses();
 						break;
 				}
 			}

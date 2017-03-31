@@ -47,6 +47,38 @@ Vue.component('board-header', {
 	template: '<tr><th>Router Board Name</th><th>IP</th><th>Admin User</th></tr>'
 })
 
+Vue.component('address-list-name-item', {
+	props: {
+		item: {
+			type: Object,
+			default: function(){
+				return undefined;
+			}
+		}
+	},
+	template: '<tr><td>{{ item.name }}</td></tr>'
+})
+
+Vue.component('address-list-name-header', {
+	template: '<tr><th>Address List Name</th></tr>'
+})
+
+Vue.component('mac-address-item', {
+	props: {
+		item: {
+			type: Object,
+			default: function(){
+				return undefined;
+			}
+		}
+	},
+	template: '<tr><td>{{ item.mac }}</td><td>{{ item.label }}</td><td>{{ item.address_list }}</td></tr>'
+})
+
+Vue.component('mac-address-header', {
+	template: '<tr><th>MAC Address</th><th>Label</th><th>Address List</th></tr>'
+})
+
 Vue.component('list', {
 	props: {
 		activeTab: {
@@ -60,7 +92,15 @@ Vue.component('list', {
 			}
 		},
 	},
-	template: '<table><thead><tr is="board-header" v-if="activeTab == 0"></tr></thead><tbody><tr is="board-item" v-if="activeTab == 0" v-for="it in items" :item="it"></tr></tbody></table>'
+	template: '<table><thead>' + 
+				'<tr is="board-header" v-if="activeTab == 0"></tr>' +
+				'<tr is="address-list-name-header" v-if="activeTab == 1"></tr>' +
+				'<tr is="mac-address-header" v-if="activeTab == 2"></tr>' +
+				'</thead><tbody>' +
+				'<tr is="board-item" v-if="activeTab == 0" v-for="it in items" :item="it"></tr>' +
+				'<tr is="address-list-name-item" v-if="activeTab == 1" v-for="it in items" :item="it"></tr>' +
+				'<tr is="mac-address-item" v-if="activeTab == 2" v-for="it in items" :item="it"></tr>' +
+				'</tbody></table>'
 })
 
 Vue.component('mikrotik', {
