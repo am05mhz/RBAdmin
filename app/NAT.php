@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MacAddress extends Model
+class NAT extends Model
 {
 
- 	protected $table = 'mac_addresses';
+ 	protected $table = 'nat';
 
 }

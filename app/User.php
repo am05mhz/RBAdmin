@@ -33,10 +33,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 	
 	public function menus(){
-		return $this->belongsToMany('App\Menu', 'RPT_PRIVILEGES', 'obj_id', 'menu_id')->where(['ptype' => 2, 'priv' => 1]);
+		return $this->belongsToMany('App\Menu', 'RPT.dbo.RPT_PRIVILEGES', 'obj_id', 'menu_id')->where(['ptype' => 2, 'priv' => 1]);
 	}
 	
 	public function roles($corp){
-		return $this->belongsToMany('App\Role', 'RPT_USER_ROLE', 'user_id', 'role_id')->where('corp', $corp);
+		return $this->belongsToMany('App\Role', 'RPT.dbo.RPT_USER_ROLE', 'user_id', 'role_id')->where('corp', $corp);
 	}
 }

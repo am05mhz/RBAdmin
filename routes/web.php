@@ -16,8 +16,17 @@ $app->get('/login', ['as' => 'login', 'uses' => 'Login@index']);
 $app->get('/logout', ['as' => 'logout', 'uses' => 'Login@logout']);
 
 $app->get('/boards', 'Mikrotik@boards');
-$app->get('/address-list-names', 'Mikrotik@address_list_names');
-$app->get('/mac-addresses', 'Mikrotik@mac_addresses');
+$app->get('/filters', 'Mikrotik@filter_rules');
+$app->get('/nat', 'Mikrotik@nat');
+$app->get('/mangle', 'Mikrotik@mangle');
+$app->get('/address-lists', 'Mikrotik@address_lists');
+$app->get('/layer7-protocols', 'Mikrotik@layer7_protocols');
+
+$app->get('/pull/filter-rules/{rb}', 'Mikrotik@import_filter_rules');
+$app->get('/pull/nat/{rb}', 'Mikrotik@import_nat');
+$app->get('/pull/mangle/{rb}', 'Mikrotik@import_mangle');
+$app->get('/pull/address-lists/{rb}', 'Mikrotik@import_address_lists');
+$app->get('/pull/layer-7-protocols/{rb}', 'Mikrotik@import_layer7_protocols');
 
 $app->get('/urls', ['as' => 'urls', 'uses' => 'Mikrotik@urls']);
 

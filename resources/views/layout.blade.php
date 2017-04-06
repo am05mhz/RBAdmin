@@ -14,6 +14,7 @@
 	<script src="{{ url('js/lib/moment.min.js') }}"></script>
 	<script src="{{ url('js/lib/numeral.min.js') }}"></script>
 	<script src="{{ url('js/lib/vue.js') }}"></script>
+	<script src="{{ url('js/lib/vuex.js') }}"></script>
 	@yield('script')
 </head>
 <body>

@@ -33,8 +33,30 @@ class AuthServiceProvider extends ServiceProvider
         // the User instance via an API token or any other method necessary.
 
         $this->app['auth']->viaRequest('api', function ($req) {
-			if (isset($_SESSION['user'])){
-				return $_SESSION['user'];
+			if (config('session.driver') == 'php'){
+				if (isset($_SESSION['user'])){
+					return $_SESSION['user'];
+				}
+			}
+			if (config('session.driver') == 'memcache'){
+				$mcon = config('session.connection');
+				$exp = config('session.expire');
+				
+				$mcache = new \Memcache();
+				$mcache->connect($mcon['host'], $mcon['port']);
+				
+				$session_id = $_COOKIE[$mcon['session_name']];
+				if ($session_id){
+					@setcookie($mcon['session_name'], $session_id, time() + $exp * 30);
+					$sess = $mcache->get($session_id);
+					if ($sess){
+						$mcache->replace($session_id, $sess, false, $exp * 60);
+						
+						if ($sess['user']){
+							return $sess['user'];
+						}
+					}
+				}
 			}
         });
 		

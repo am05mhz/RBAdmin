@@ -12,7 +12,7 @@
 
 @section('content')
 <div id="app">
-	<navigation :items="navigation"></navigation>
-	<mikrotik :tabs="tabs" :active-tab="activeTab" :items="items" @tab-click="tabClick"></mikrotik>
+	<navigation></navigation>
+	<mikrotik @tool-click="toolClick"></mikrotik>
 </div>
 @endsection

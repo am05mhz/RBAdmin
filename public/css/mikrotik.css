@@ -16,41 +16,73 @@ nav .nav-toggle{
 	display: none;
 }
 
-nav ul, #tabs{
+nav ul, #tabs, #tools{
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-nav li, #tabs li{
+nav li, #tabs li, #tools li{
 	display: inline-block;
 }
 
 nav li a{
 	display: block;
+	line-height: 20px;
 }
 
 nav li a, #tabs li{
 	padding: 10px 20px;
 }
 
-#tabs{
-	margin-top: 50px;
+#mikrotik{
+	margin: 40px 0 0;
+	padding: 10px;
 	display: inline-block;
+	box-sizing: border-box;
 	width: 100%;
 }
 
 #mikrotik table{
 	width: 100%;
+	margin-top: 10px;
+}
+
+#mikrotik th, #mikrotik td{
+	padding: 10px;
+}
+
+#mikrotik .checkbox{
+	width: 30px;
+	text-align: left;
+}
+
+#tabs{
+	border-bottom: 1px solid #ddd;
 }
 
 #tabs li{
 	cursor: pointer;
+	border: 1px solid #ddd;
+	margin: 0 5px -1px 0;
 }
 
 #tabs li.active{
 	color: #fff;
 	background: #2196f3;
+	border-color: #2196f3;
+}
+
+#tools{
+	margin: 10px 0;
+}
+
+#tools li{
+	padding: 10px;
+	color: #fff;
+	background: #222;
+	cursor: pointer;
+	margin-right: 2px;
 }
 
 @media max-width(460px){

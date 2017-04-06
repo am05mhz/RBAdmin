@@ -7,7 +7,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/BenMenking/routeros-api.git"
+            "url": "https://github.com/am05mhz/RouterOS.git"
         }
     ],
     "require": {
@@ -16,7 +16,7 @@
         "vlucas/phpdotenv": "~2.2",
         "filp/whoops": "^2.1",
         "symfony/var-dumper": "^3.2",
-        "BenMenking/routeros-api": "master"
+        "am05mhz/RouterOS": "master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
