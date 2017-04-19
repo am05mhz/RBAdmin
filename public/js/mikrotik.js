@@ -408,6 +408,12 @@ docReady(function(){
 				if (type.substr(-1) == 's'){
 					type = type.substr(0, type.length - 1);
 				}
+				if (type == 'address-list'){
+					type = 'addressList';
+				}
+				if (type == 'layer-7-protocol'){
+					type = 'layer7Protocol';
+				}
 				if (this.editing){
 					errand({
 						url: this.tabName + '/update',
@@ -415,7 +421,11 @@ docReady(function(){
 						method: 'post',
 						data: dataPool.state[type],
 					}).success(function(resp){
-						
+						if (resp[type]){
+							_self.showForm = false;
+						} else {
+							
+						}
 					}).error(function(resp){
 						
 					});

@@ -42,6 +42,18 @@ $app->get('/address-lists/delete/{rb}', 'Mikrotik@delete_address_lists');
 $app->get('/layer-7-protocols/delete/{rb}', 'Mikrotik@delete_layer7_protocols');
 
 $app->post('/boards/save', 'Mikrotik@save_board');
+$app->post('/filters/save', 'Mikrotik@save_filter_rules');
+$app->post('/nat/save', 'Mikrotik@save_nat');
+$app->post('/mangle/save', 'Mikrotik@save_mangle');
+$app->post('/address-lists/save', 'Mikrotik@save_address_list');
+$app->post('/layer-7-protocols/save', 'Mikrotik@save_layer7_protocol');
+
+$app->post('/boards/update', 'Mikrotik@update_board');
+$app->post('/filters/update', 'Mikrotik@update_filter_rules');
+$app->post('/nat/update', 'Mikrotik@update_nat');
+$app->post('/mangle/update', 'Mikrotik@update_mangle');
+$app->post('/address-lists/update', 'Mikrotik@update_address_list');
+$app->post('/layer-7-protocols/update', 'Mikrotik@update_layer7_protocol');
 
 $app->get('/urls', ['as' => 'urls', 'uses' => 'Mikrotik@urls']);
 

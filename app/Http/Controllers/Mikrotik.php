@@ -744,6 +744,46 @@ class Mikrotik extends Controller
 		return ['board' => $board];
 	}
 	
+	public function save_address_list(Request $req){
+		$data = $req->only(['list', 'address', 'timeout', 'comment']);
+		
+		$addr = new \App\AddressList();
+		$addr->list = $data['list'];
+		$addr->address = $data['address'];
+		$addr->timeout = $data['timeout'];
+		$addr->comment = $data['comment'];
+		$addr->save();
+		
+		return ['addressList' => $addr];
+	}
+	
+	public function save_layer7_protocol(Request $req){
+		$data = $req->only(['name', 'regexp', 'comment']);
+		
+		$proto = new \App\Layer7Protocol();
+		$proto->name = $data['name'];
+		$proto->regexp = $data['regexp'];
+		$proto->comment = $data['comment'];
+		$proto->save();
+		
+		return ['layer7Protocol' => $proto];
+	}
+	
+	public function update_board(Request $req){
+		$data = $req->only(['id', 'name', 'ip', 'user', 'password']);
+		
+		$board = \App\Board::where(['id' => $data['id']]);
+		
+		unset($data['id']);
+		if (!$data['password']){
+			unset($data['password']);
+		}
+		
+		$board->update($data);
+		
+		return ['board' => $board];
+	}
+	
 	public function urls(){
 		$urls = 'var navigation = ['
 			. '{url:"' . url('/') . '", label:"Home"},' . 

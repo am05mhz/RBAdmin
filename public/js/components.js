@@ -429,14 +429,15 @@ Vue.component('filter-form', {
 					'<p><label>Chain:</label><input type="text" v-model="filter.chain"/></p>' +
 					'<p><label>Action:</label><input type="text" v-model="filter.action"/></p>' +
 					'<p><label>Comment:</label><input type="text" v-model="filter.comment"/></p>' +
+					'<p><label>Rules:</label><input type="text" v-model="filter.rules"/></p>' +
 				'</section>' +
 				'</div>',
 })
 
 Vue.component('nat-form', {
 	computed: {
-		board: function(){
-			return this.$store.state.board;
+		nat: function(){
+			return this.$store.state.nat;
 		},
 		editing: function(){
 			return this.$store.state.editing;
@@ -445,16 +446,18 @@ Vue.component('nat-form', {
 	template: '<div>' +
 				'<header>{{ editing ? \'Editing\' : \'New\' }} NAT</header>' +
 				'<section>' +
-					'<p><label>Name:</label><input type="text" v-model="board.name"/></p>' +
-					'<p><label>IP:</label><input type="text" v-model="board.ip"/></p>' +
+					'<p><label>Chain:</label><input type="text" v-model="nat.chain"/></p>' +
+					'<p><label>Action:</label><input type="text" v-model="nat.action"/></p>' +
+					'<p><label>Comment:</label><input type="text" v-model="nat.comment"/></p>' +
+					'<p><label>Rules:</label><input type="text" v-model="nat.rules"/></p>' +
 				'</section>' +
 				'</div>',
 })
 
 Vue.component('mangle-form', {
 	computed: {
-		board: function(){
-			return this.$store.state.board;
+		mangle: function(){
+			return this.$store.state.mangle;
 		},
 		editing: function(){
 			return this.$store.state.editing;
@@ -463,16 +466,18 @@ Vue.component('mangle-form', {
 	template: '<div>' +
 				'<header>{{ editing ? \'Editing\' : \'New\' }} Mangle</header>' +
 				'<section>' +
-					'<p><label>Name:</label><input type="text" v-model="board.name"/></p>' +
-					'<p><label>IP:</label><input type="text" v-model="board.ip"/></p>' +
+					'<p><label>Chain:</label><input type="text" v-model="mangle.chain"/></p>' +
+					'<p><label>Action:</label><input type="text" v-model="mangle.action"/></p>' +
+					'<p><label>Comment:</label><input type="text" v-model="mangle.comment"/></p>' +
+					'<p><label>Rules:</label><input type="text" v-model="mangle.rules"/></p>' +
 				'</section>' +
 				'</div>',
 })
 
 Vue.component('address-list-form', {
 	computed: {
-		board: function(){
-			return this.$store.state.board;
+		addr: function(){
+			return this.$store.state.addressList;
 		},
 		editing: function(){
 			return this.$store.state.editing;
@@ -481,16 +486,18 @@ Vue.component('address-list-form', {
 	template: '<div>' +
 				'<header>{{ editing ? \'Editing\' : \'New\' }} Address List</header>' +
 				'<section>' +
-					'<p><label>Name:</label><input type="text" v-model="board.name"/></p>' +
-					'<p><label>IP:</label><input type="text" v-model="board.ip"/></p>' +
+					'<p><label>List:</label><input type="text" v-model="addr.list"/></p>' +
+					'<p><label>Address:</label><input type="text" v-model="addr.address"/></p>' +
+					'<p><label>Timeout:</label><input type="text" v-model="addr.timeout"/></p>' +
+					'<p><label>Comment:</label><input type="text" v-model="addr.comment"/></p>' +
 				'</section>' +
 				'</div>',
 })
 
 Vue.component('layer7-protocol-form', {
 	computed: {
-		board: function(){
-			return this.$store.state.board;
+		proto: function(){
+			return this.$store.state.layer7Protocol;
 		},
 		editing: function(){
 			return this.$store.state.editing;
@@ -499,8 +506,9 @@ Vue.component('layer7-protocol-form', {
 	template: '<div>' +
 				'<header>{{ editing ? \'Editing\' : \'New\' }} Layer 7 Protocol</header>' +
 				'<section>' +
-					'<p><label>Name:</label><input type="text" v-model="board.name"/></p>' +
-					'<p><label>IP:</label><input type="text" v-model="board.ip"/></p>' +
+					'<p><label>Name:</label><input type="text" v-model="proto.name"/></p>' +
+					'<p><label>Regular Expression:</label><input type="text" v-model="proto.regexp"/></p>' +
+					'<p><label>Comment:</label><input type="text" v-model="proto.comment"/></p>' +
 				'</section>' +
 				'</div>',
 })
