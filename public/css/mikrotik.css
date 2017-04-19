@@ -46,6 +46,7 @@ nav li a, #tabs li{
 #mikrotik table{
 	width: 100%;
 	margin-top: 10px;
+	border-collapse: collapse;
 }
 
 #mikrotik th, #mikrotik td{
@@ -69,8 +70,8 @@ nav li a, #tabs li{
 
 #tabs li.active{
 	color: #fff;
-	background: #2196f3;
-	border-color: #2196f3;
+	background: dodgerblue;
+	border-color: dodgerblue;
 }
 
 #tools{
@@ -83,6 +84,154 @@ nav li a, #tabs li{
 	background: #222;
 	cursor: pointer;
 	margin-right: 2px;
+}
+
+.loading{
+	text-align: center;
+}
+
+aside.form{
+	top: calc(50% - 350px);
+	left: calc(50% - 250px);
+	width: 500px;
+	height: 600px;
+}
+
+aside.board-picker{
+	top: calc(50% - 250px);
+	left: calc(50% - 250px);
+	width: 500px;
+	height: 300px;
+}
+
+aside.form, aside.board-picker{
+	position: fixed;
+	z-index: -1;
+	opacity: 0;
+	background: #fff;
+	box-shadow: 0 5px 15px 5px rgba(0,0,0,.3);
+	transition: ease .4s;
+}
+
+aside.form.showing{
+	top: calc(50% - 300px);
+}
+
+aside.board-picker.showing{
+	top: calc(50% - 150px);
+}
+
+aside.form.showing, aside.board-picker.showing{
+	z-index: 10;
+	opacity: 1;
+}
+
+aside.form header, aside.board-picker header{
+	padding: 20px;
+	font-size: 1.5em;
+}
+
+aside.form section, aside.board-picker section{
+	padding: 0 20px;
+}
+
+aside.form button.close, aside.board-picker button.close{
+	position: absolute;
+	top: -13px;
+	right: -13px;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border-radius: 50%;
+	background: tomato;
+	box-shadow: 0 0 5px 1px rgba(0,0,0,.3);
+}
+
+aside.form button.close:before, aside.form button.close:after,
+aside.board-picker button.close:before, aside.board-picker button.close:after{
+	content: '';
+	display: block;
+	box-sizing: border-box;
+	border: 1px solid #fff;
+	width: 20px;
+	height: 0;
+	position: absolute;
+	left: 3px;
+	top: 12px;
+}
+
+aside.form button.close:before,
+aside.board-picker button.close:before{
+	transform: rotate(45deg);
+}
+
+aside.form button.close:after,
+aside.board-picker button.close:after{
+	transform: rotate(-45deg);
+}
+
+aside.form label{
+	text-align: right;
+	padding: 0 10px 0 0;
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100px;
+}
+
+aside.form input{
+	width: calc(100% - 100px);
+	border-width: 0;
+	border-bottom: 1px solid #222;
+	padding: 5px;
+}
+
+aside.form p{
+	margin: 0 0 20px;
+}
+
+aside.form section.buttons, aside.board-picker section.buttons{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 0 20px 20px
+}
+
+aside.form section.buttons button, aside.board-picker section.buttons button{
+	padding: 10px;
+	background: dodgerblue;
+	color: #fff;
+}
+
+aside ul{
+	margin: 0;
+}
+
+.rule-item{
+	display: inline-block;
+	margin: 5px;
+	color: #fff;
+	background: dodgerblue;
+	padding: 5px;
+}
+
+.paging{
+	text-align: center;
+}
+
+.paging button{
+	padding: 5px;
+	display: inline-block;
+	min-width: 26px;
+	border-radius: 13px;
+}
+
+.paging button.current{
+	background: dodgerblue;
+	color: #fff;
+}
+
+tr.selected{
+	background: gainsboro;
 }
 
 @media max-width(460px){

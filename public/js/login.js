@@ -2,28 +2,28 @@ Vue.component('login-form', {
 	props: {
 		url: {
 			type: String,
-			required: true
+			required: true,
 		},
 		title: {
 			type: String,
-			default: 'Login'
+			default: 'Login',
 		},
 		method: {
 			type: String,
 			default: 'post',
 			validator: function(v){
 				return ['get', 'post'].indexOf(v.toLowerCase()) != -1;
-			}
+			},
 		},
 		json: {
 			type: Boolean,
-			default: true
-		}
+			default: true,
+		},
 	},
 	data: function(){
 		return {
 			username: '',
-			password: ''
+			password: '',
 		}
 	},
 	template: '<form :action="url" :method="method" @submit.prevent="formSubmit">' +
@@ -53,8 +53,8 @@ Vue.component('login-form', {
 				}).error(function(resp){
 					console.log(resp);
 				});
-		}
-	}
+		},
+	},
 });
 
 docReady(function(){

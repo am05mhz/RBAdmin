@@ -1,3 +1,11 @@
+function isVarTypeOf(_var, _type){
+    try {
+        return _var.constructor === _type;
+    } catch(ex) {
+        return _var == _type; //fallback for null or undefined
+    }
+}
+
 var errand = function(args){
 	if (this.self !== undefined){
 		return new errand(args);
@@ -6,50 +14,71 @@ var errand = function(args){
         throw 'invalid arguments';
     }
 
-	var arr = [];
-	for (var key in this.data){
-		arr.push(key + '=' + this.data[key]);
+	var arr = this.serialize(this.data);
+	if (arr.length > 0){
+		if (this.method !== 'get'){
+			this.formData = arr.join('&');
+		} else {
+			this.url += (this.url.indexOf('?') != -1) ? '&' : '?' + arr.join('&');
+		}
 	}
-	if (this.method !== 'get'){
-		this.formData = arr.join('&');
-	} else if (arr.length > 0){
-		this.url += (this.url.indexOf('?') != -1) ? '&' : '?' + arr.join('&');
-	}
-
+	
 	this.setXhr();
 };
 
 errand.methods = ['get', 'post', 'put', 'delete'];
+
+errand.prototype.serialize = function(data, varName){
+	var arr = [];
+	var vName;
+	for (var key in data){
+		if (varName == '' || varName == undefined){
+			vName = key;
+		} else {
+			vName = varName + '[' + key + ']';
+		}
+		if (isVarTypeOf(data[key], Array) || isVarTypeOf(data[key], Object)){
+			arr = arr.concat(this.serialize(data[key], vName));
+		} else {
+			arr.push(vName + '=' + data[key]);
+		}
+	}
+	return arr;
+}
+
 errand.prototype.parse = function(args){
-    if (typeof args === 'string'){
+    if (isVarTypeOf(args, String)){
         args = {
             url: args
         };
     }
-
-    if (typeof args !== 'object') { return; }
-	if (typeof args.url !== 'string') { return; }
-
+	
+    if (!isVarTypeOf(args, Object)) { return; }
+	if (!isVarTypeOf(args.url, String)) { return; }
+	
     this.url = args.url;
-    this.method = 'get';
+	this.method = 'get';
     this.json = false;
     this.data = {};
+    this.formData = null;
 
-    if (typeof args.method === 'string' && errand.methods.indexOf(args.method.toLowerCase()) != -1) {
-        this.method = args.method.toLowerCase();
+    if (isVarTypeOf(args.method, String)){
+		args.method = args.method.toLowerCase();
+		if (errand.methods.indexOf(args.method) != -1) {
+			this.method = args.method;
+        }
     }
     if (args.json){
         this.json = true;
     }
-    if (typeof args.data === 'object'){
+    if (isVarTypeOf(args.data, Object)){
 		this.data = args.data;
 	}
-	if (typeof args.headers === 'object'){
+	if (isVarTypeOf(args.headers, Object)){
 		this.headers = args.headers;
 	} else {
 		this.headers = {};
 	}
-	this.headers['X-Requested-With'] = 'XMLHttpRequest';
 
     return true;
 };
@@ -79,7 +108,7 @@ errand.prototype.setXhr = function(){
 
 	this.xhr.call = function(category, result){
 		for (var i = 0; i < this.callbacks[category].length; i++){
-			if (typeof this.callbacks[category][i] === 'function'){
+			if (isVarTypeOf(this.callbacks[category][i], Function)){
 				this.callbacks[category][i](result);
 			}
 		}
@@ -131,6 +160,7 @@ errand.prototype.setXhr = function(){
 
 	this.xhr.open(this.method, this.url, true);
 	this.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
 	if (this.headers){
 		for (header in this.headers){
@@ -138,7 +168,7 @@ errand.prototype.setXhr = function(){
 		}
 	}
 
-	this.xhr.send(this.formData !== undefined ? this.formData : null);
+	this.xhr.send(this.formData);
 };
 
 if (window.module !== undefined && module.exports){

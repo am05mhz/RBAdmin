@@ -28,10 +28,27 @@ $app->get('/pull/mangle/{rb}', 'Mikrotik@import_mangle');
 $app->get('/pull/address-lists/{rb}', 'Mikrotik@import_address_lists');
 $app->get('/pull/layer-7-protocols/{rb}', 'Mikrotik@import_layer7_protocols');
 
+$app->post('/push/filters/{rb}', 'Mikrotik@push_filter_rules');
+$app->post('/push/nat/{rb}', 'Mikrotik@push_nat');
+$app->post('/push/mangle/{rb}', 'Mikrotik@push_mangle');
+$app->post('/push/address-lists/{rb}', 'Mikrotik@push_address_lists');
+$app->post('/push/layer-7-protocols/{rb}', 'Mikrotik@push_layer7_protocols');
+
+$app->get('/boards/delete', 'Mikrotik@delete_boards');
+$app->get('/filters/delete/{rb}', 'Mikrotik@delete_filters');
+$app->get('/nat/delete/{rb}', 'Mikrotik@delete_nat');
+$app->get('/mangle/delete/{rb}', 'Mikrotik@delete_mangle');
+$app->get('/address-lists/delete/{rb}', 'Mikrotik@delete_address_lists');
+$app->get('/layer-7-protocols/delete/{rb}', 'Mikrotik@delete_layer7_protocols');
+
+$app->post('/boards/save', 'Mikrotik@save_board');
+
 $app->get('/urls', ['as' => 'urls', 'uses' => 'Mikrotik@urls']);
 
 $app->get('/key', function(){
 	return str_random(32);
 });
+
+$app->get('/canvas[/{text}]', 'Canvas@index');
 
 $app->post('/login', 'Login@authenticate');
