@@ -75,6 +75,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -132,6 +139,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -189,6 +203,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -246,6 +267,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -290,6 +318,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -331,6 +366,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -370,6 +412,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -416,6 +465,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -458,6 +514,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -500,6 +563,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -546,6 +616,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -584,6 +661,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -622,6 +706,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -660,6 +751,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -700,6 +798,13 @@ class Mikrotik extends Controller
 		
 		if ($board){
 			if (!is_resource($this->rb) or ($this->rb_name != $rb)){
+				$chiper = base64_decode($board->password);
+				$iv = substr($chiper, 0, 16);
+				$chiper = substr($chiper, 16);
+				$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
+				if ($pwd){
+					$board->password = $pwd;
+				}
 				$this->rb_name = $rb;
 				$this->rb = new \am05mhz\RouterOS();
 				//$this->rb->debug = true;
@@ -733,12 +838,13 @@ class Mikrotik extends Controller
 	
 	public function save_board(Request $req){
 		$data = $req->only(['name', 'ip', 'user', 'password']);
+		$iv = openssl_random_pseudo_bytes(16);
 		
 		$board = new \App\Board();
 		$board->name = $data['name'];
 		$board->ip = $data['ip'];
 		$board->user = $data['user'];
-		$board->password = $data['password'];
+		$board->password = base64_encode($iv . openssl_encrypt($data['password'], 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv));
 		$board->save();
 		
 		return ['board' => $board];
@@ -771,17 +877,20 @@ class Mikrotik extends Controller
 	
 	public function update_board(Request $req){
 		$data = $req->only(['id', 'name', 'ip', 'user', 'password']);
+		$iv = openssl_random_pseudo_bytes(16);
 		
 		$board = \App\Board::where(['id' => $data['id']]);
 		
 		unset($data['id']);
 		if (!$data['password']){
 			unset($data['password']);
+		} else {
+			$data['password'] = base64_encode($iv . openssl_encrypt($data['password'], 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv));
 		}
 		
 		$board->update($data);
 		
-		return ['board' => $board];
+		return ['board' => $board->first()];
 	}
 	
 	public function urls(){
