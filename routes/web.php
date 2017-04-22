@@ -61,18 +61,6 @@ $app->get('/key', function(){
 	return str_random(32);
 });
 
-$app->get('/decrypt', function(){
-	$chiper = base64_decode('MSFuR/77SnEaKx5qMkhE0dnLGPI=');
-	$iv = substr($chiper, 0, 16);
-	$chiper = substr($chiper, 16);
-	$pwd = openssl_decrypt($chiper, 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv);
-	if ($pwd){
-		return $pwd;
-	} else {
-		return 'gagal son';
-	}
-});
-
 $app->get('/canvas[/{text}]', 'Canvas@index');
 
 $app->post('/login', 'Login@authenticate');

@@ -178,15 +178,31 @@ aside.form label{
 	width: 100px;
 }
 
-aside.form input{
+aside.form input, aside.form select{
 	width: calc(100% - 100px);
 	border-width: 0;
 	border-bottom: 1px solid #222;
 	padding: 5px;
 }
 
+aside.form select{
+	font: inherit;
+}
+
 aside.form p{
 	margin: 0 0 20px;
+}
+
+aside.form p .rules{
+	display: inline-block;
+	vertical-align: text-top;
+	width: calc(100% - 100px);
+	min-height: 100px;
+	border-bottom: 1px solid #222;
+}
+
+aside.form p .rules .rule-item{
+	cursor: pointer;
 }
 
 aside.form section.buttons, aside.board-picker section.buttons{
@@ -196,10 +212,21 @@ aside.form section.buttons, aside.board-picker section.buttons{
 	padding: 0 20px 20px
 }
 
-aside.form section.buttons button, aside.board-picker section.buttons button{
+aside.form section.buttons button, aside.board-picker section.buttons button,
+aside.form p.buttons button{
 	padding: 10px;
 	background: dodgerblue;
 	color: #fff;
+}
+
+aside.form p.buttons{
+	position: relative;
+}
+
+aside.form p.buttons button{
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 aside ul{

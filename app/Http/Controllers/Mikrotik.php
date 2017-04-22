@@ -846,6 +846,9 @@ class Mikrotik extends Controller
 		$board->user = $data['user'];
 		$board->password = base64_encode($iv . openssl_encrypt($data['password'], 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv));
 		$board->save();
+
+		unset($board->password);
+		$board->checked = false;
 		
 		return ['board' => $board];
 	}

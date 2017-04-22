@@ -28,7 +28,9 @@ docReady(function(){
 				chain: '',
 				action: '',
 				comment: '',
-				rules: [],
+				rules: {},
+				ruleName: '',
+				ruleValue: '',
 				fields: [
 					'address-list',
 					'address-list-timeout',
@@ -91,7 +93,9 @@ docReady(function(){
 				chain: '',
 				action: '',
 				comment: '',
-				rules: [],
+				rules: {},
+				ruleName: '',
+				ruleValue: '',
 				fields: [
 					'address-list',
 					'address-list-timeout',
@@ -156,7 +160,9 @@ docReady(function(){
 				chain: '',
 				action: '',
 				comment: '',
-				rules: [],
+				rules: {},
+				ruleName: '',
+				ruleValue: '',
 				fields: [
 					'address-list',
 					'address-list-timeout',
@@ -300,6 +306,26 @@ docReady(function(){
 			setChooseBoards: function(state, val){
 				state.chooseBoards = val;
 			},
+			addRule: function(state, val){
+				var obj = {};
+				for(prop in state[val.type].rules){
+					obj[prop] = state[val.type].rules[prop];
+				}
+				obj[val.key] = val.value;
+				state[val.type].rules = obj;
+				state[val.type].ruleName = '';
+				state[val.type].ruleValue = '';
+			},
+			removeRule: function(state, val){
+				console.log(val);
+				var obj = {}
+				for(prop in state[val.type].rules){
+					if (prop != val.key){						
+						obj[prop] = state[val.type].rules[prop];
+					}
+				}
+				state[val.type].rules = obj;
+			}
 		},
 	});
 	
@@ -312,6 +338,7 @@ docReady(function(){
 		},
 		data: {
 			boardAction: '',
+			editItem: undefined,
 		},
 		computed: {
 			navigation: {
@@ -523,12 +550,14 @@ docReady(function(){
 						}
 						switch(tool.toLowerCase()){
 							case 'add':
-								this.board = {
-									name: '',
-									ip: '',
-									user: '',
-									password: '',
-								};
+								var b = {};
+								for(prop in this.board){
+									if (['checked', 'id'].indexOf(prop) !== -1){
+									} else {
+										b[prop] = '';
+									}
+								}
+								this.board = b;
 								this.editing = false;
 								this.showForm = true;
 								break;
@@ -538,7 +567,13 @@ docReady(function(){
 								} else if (this.selectedItems.length == 0){
 									alert('Please select the item you want to edit');
 								} else {
-									this.board = this.selectedItems[0];
+									this.editItem = this.selectedItems[0];
+									for(prop in this.editItem){
+										if (this.board.hasOwnProperty(prop) || prop == 'id'){
+											this.board[prop] = this.editItem[prop];
+										}
+									}
+									this.board.password = '';
 									this.editing = true;
 									this.showForm = true;
 								}
@@ -553,8 +588,31 @@ docReady(function(){
 					case 3:
 					case 4:
 					case 5:
+						var type = this.tabName;
+						if (type.substr(-1) == 's'){
+							type = type.substr(0, type.length - 1);
+						}
+						if (type == 'address-list'){
+							type = 'addressList';
+						}
+						if (type == 'layer-7-protocol'){
+							type = 'layer7Protocol';
+						}
 						switch(tool.toLowerCase()){
 							case 'add':
+								var t = {};
+								for(prop in this[type]){
+									if (['checked', 'id'].indexOf(prop) !== -1){
+									} else if (prop == 'fields'){
+										t[prop] = this[type][prop];
+									} else if (this[type][prop].constructor === Object){
+										t[prop] = {};
+									} else {
+										t[prop] = '';
+									}
+								}
+								this[type] = t;
+								this.editing = false;
 								this.showForm = true;
 								break;
 							case 'edit':
@@ -563,7 +621,12 @@ docReady(function(){
 								} else if (this.selectedItems.length == 0){
 									alert('Please select the item you want to edit');
 								} else {
-									this.board = this.selectedItems[0];
+									this.editItem = this.selectedItems[0];
+									for(prop in this.editItem){
+										this[type][prop] = this.editItem[prop];
+									}
+									this[type].ruleName = '';
+									this[type].ruleValue = '';
 									this.editing = true;
 									this.showForm = true;
 								}
@@ -608,6 +671,10 @@ docReady(function(){
 					}).success(function(resp){
 						if (resp[type]){
 							console.log(resp[type]);
+							for(prop in resp[type]){
+								_self.editItem[prop] = resp[type][prop];
+							}
+							_self.editItem = undefined;
 							_self.showForm = false;
 						} else {
 							

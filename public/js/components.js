@@ -423,13 +423,37 @@ Vue.component('filter-form', {
 			return this.$store.state.editing;
 		},
 	},
+	methods: {
+		addRule: function(){
+			if (this.filter.ruleName != '' && this.filter.ruleValue != ''){
+				this.$store.commit('addRule', {
+					type: 'filter',
+					key: this.filter.ruleName,
+					value: this.filter.ruleValue,
+				});
+			}
+		},
+		removeRule: function(key){
+			this.$store.commit('removeRule', {
+				type: 'filter',
+				key: key,
+			});
+		}
+	},
 	template: '<div>' +
 				'<header>{{ editing ? \'Editing\' : \'New\' }} Filter Rule</header>' +
 				'<section>' +
 					'<p><label>Chain:</label><input type="text" v-model="filter.chain"/></p>' +
 					'<p><label>Action:</label><input type="text" v-model="filter.action"/></p>' +
 					'<p><label>Comment:</label><input type="text" v-model="filter.comment"/></p>' +
-					'<p><label>Rules:</label><input type="text" v-model="filter.rules"/></p>' +
+					'<p><label>Rules:</label><span class="rules">' +
+						'<span v-for="(value, key) in filter.rules" class="rule-item" @click="removeRule(key)">{{ key }}: {{ value }}</span>' +
+					'</span></p>' +
+					'<p><label>Rule Name:</label>' + 
+						'<select v-model="filter.ruleName"><option v-for="f in filter.fields" :value="f">{{ f }}</option></select>' +
+					'</p>' +
+					'<p><label>Rule Value:</label><input type="text" v-model="filter.ruleValue"/></p>' +
+					'<p class="buttons"><button type="button" @click="addRule">Add Rule</button></p>' +
 				'</section>' +
 				'</div>',
 })
