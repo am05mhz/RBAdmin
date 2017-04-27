@@ -16,7 +16,7 @@ nav .nav-toggle{
 	display: none;
 }
 
-nav ul, #tabs, #tools{
+nav ul, #tabs, #tools, .board-picker ul{
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -51,6 +51,11 @@ nav li a, #tabs li{
 
 #mikrotik th, #mikrotik td{
 	padding: 10px;
+}
+
+#mikrotik td.regexp{
+	word-break: break-word;
+	max-width: 400px;
 }
 
 #mikrotik .checkbox{

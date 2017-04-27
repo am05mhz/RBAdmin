@@ -209,7 +209,7 @@ Vue.component('layer7-protocol-item', {
 	template: '<tr @click="click(item)" :class="{ selected: item.checked }">' +
 				'<td class="checkbox"><input type="checkbox" v-model="item.checked" @click.stop=""/></td>' +
 				'<td>{{ item.name }}</td>' +
-				'<td>{{ item.regexp }}</td>' +
+				'<td class="regexp">{{ item.regexp }}</td>' +
 				'<td>{{ item.comment }}</td>' +
 			'</tr>',
 	methods: {
@@ -362,33 +362,41 @@ Vue.component('list', {
 		loading: function(){
 			return this.$store.state.loading;
 		},
+		header: function(){
+			switch(this.activeTab){
+				case 0:
+					return 'board-header';
+				case 1:
+				case 2:
+				case 3:
+					return 'rule-header';
+				case 4:
+					return 'address-list-header';
+				case 5:
+					return 'layer7-protocol-header';
+			}
+		},
+		listItem: function(){
+			switch(this.activeTab){
+				case 0:
+					return 'board-item';
+				case 1:
+				case 2:
+				case 3:
+					return 'rule-item';
+				case 4:
+					return 'address-list-item';
+				case 5:
+					return 'layer7-protocol-item';
+			}
+		},
 	},
-	template: '<table><thead v-if="activeTab == 0">' + 
-				'<tr is="board-header"></tr>' +
-				'</thead><thead v-if="activeTab == 1">'+
-				'<tr is="rule-header"></tr>' +
-				'</thead><thead v-if="activeTab == 2">'+
-				'<tr is="rule-header"></tr>' +
-				'</thead><thead v-if="activeTab == 3">'+
-				'<tr is="rule-header"></tr>' +
-				'</thead><thead v-if="activeTab == 4">'+
-				'<tr is="address-list-header"></tr>' +
-				'</thead><thead v-if="activeTab == 5">'+
-				'<tr is="layer7-protocol-header"></tr>' +
-				'</thead><thead v-if="loading">'+
+	template: '<table><thead>' + 
+				'<tr :is="header"></tr>' +
+				'</thead><tbody v-if="loading">'+
 				'<tr is="loading"></tr>' +
-				'</thead><tbody v-if="activeTab == 0">' +
-				'<tr is="board-item" v-for="it in items" :item="it"></tr>' +
-				'</tbody><tbody v-if="activeTab == 1">' +
-				'<tr is="rule-item" v-for="it in items" :item="it"></tr>' +
-				'</tbody><tbody v-if="activeTab == 2">' +
-				'<tr is="rule-item" v-for="it in items" :item="it"></tr>' +
-				'</tbody><tbody v-if="activeTab == 3">' +
-				'<tr is="rule-item" v-for="it in items" :item="it"></tr>' +
-				'</tbody><tbody v-if="activeTab == 4">' +
-				'<tr is="address-list-item" v-for="it in items" :item="it"></tr>' +
-				'</tbody><tbody v-if="activeTab == 5">' +
-				'<tr is="layer7-protocol-item" v-for="it in items" :item="it"></tr>' +
+				'</tbody><tbody>' +
+				'<tr :is="listItem" v-for="it in items" :item="it"></tr>' +
 				'</tbody><tfoot v-if="pages > 1">' +
 				'<tr is="paging"></tr>' +
 				'</tfoot></table>',
@@ -414,10 +422,37 @@ Vue.component('board-form', {
 				'</div>',
 })
 
-Vue.component('filter-form', {
+Vue.component('rule-form', {
+	props: {
+		ruleType: {
+			type: String,
+			default: 'filter',
+			validator: function(value){
+				var valid = ['filter', 'nat', 'mangle'];
+				return (valid.indexOf(value) !== -1);
+			}
+		}
+	},
 	computed: {
-		filter: function(){
-			return this.$store.state.filter;
+		rule: function(){
+			switch(this.ruleType){
+				case 'filter':
+					return this.$store.state.filter;
+				case 'nat':
+					return this.$store.state.nat;
+				case 'mangle':
+					return this.$store.state.mangle;
+			}
+		},
+		tab: function(){
+			switch(this.ruleType){
+				case 'filter':
+					return 'Filter';
+				case 'nat':
+					return 'NAT';
+				case 'mangle':
+					return 'Mangle';
+			}
 		},
 		editing: function(){
 			return this.$store.state.editing;
@@ -425,75 +460,35 @@ Vue.component('filter-form', {
 	},
 	methods: {
 		addRule: function(){
-			if (this.filter.ruleName != '' && this.filter.ruleValue != ''){
+			if (this.rule.ruleName != '' && this.rule.ruleValue != ''){
 				this.$store.commit('addRule', {
-					type: 'filter',
-					key: this.filter.ruleName,
-					value: this.filter.ruleValue,
+					type: this.ruleType,
+					key: this.rule.ruleName,
+					value: this.rule.ruleValue,
 				});
 			}
 		},
 		removeRule: function(key){
 			this.$store.commit('removeRule', {
-				type: 'filter',
+				type: this.ruleType,
 				key: key,
 			});
 		}
 	},
 	template: '<div>' +
-				'<header>{{ editing ? \'Editing\' : \'New\' }} Filter Rule</header>' +
+				'<header>{{ editing ? \'Editing\' : \'New\' }} {{ tab }} Rule</header>' +
 				'<section>' +
-					'<p><label>Chain:</label><input type="text" v-model="filter.chain"/></p>' +
-					'<p><label>Action:</label><input type="text" v-model="filter.action"/></p>' +
-					'<p><label>Comment:</label><input type="text" v-model="filter.comment"/></p>' +
+					'<p><label>Chain:</label><input type="text" v-model="rule.chain"/></p>' +
+					'<p><label>Action:</label><input type="text" v-model="rule.action"/></p>' +
+					'<p><label>Comment:</label><input type="text" v-model="rule.comment"/></p>' +
 					'<p><label>Rules:</label><span class="rules">' +
-						'<span v-for="(value, key) in filter.rules" class="rule-item" @click="removeRule(key)">{{ key }}: {{ value }}</span>' +
+						'<span v-for="(value, key) in rule.rules" class="rule-item" @click="removeRule(key)">{{ key }}: {{ value }}</span>' +
 					'</span></p>' +
 					'<p><label>Rule Name:</label>' + 
-						'<select v-model="filter.ruleName"><option v-for="f in filter.fields" :value="f">{{ f }}</option></select>' +
+						'<select v-model="rule.ruleName"><option v-for="f in rule.fields" :value="f">{{ f }}</option></select>' +
 					'</p>' +
-					'<p><label>Rule Value:</label><input type="text" v-model="filter.ruleValue"/></p>' +
+					'<p><label>Rule Value:</label><input type="text" v-model="rule.ruleValue"/></p>' +
 					'<p class="buttons"><button type="button" @click="addRule">Add Rule</button></p>' +
-				'</section>' +
-				'</div>',
-})
-
-Vue.component('nat-form', {
-	computed: {
-		nat: function(){
-			return this.$store.state.nat;
-		},
-		editing: function(){
-			return this.$store.state.editing;
-		},
-	},
-	template: '<div>' +
-				'<header>{{ editing ? \'Editing\' : \'New\' }} NAT</header>' +
-				'<section>' +
-					'<p><label>Chain:</label><input type="text" v-model="nat.chain"/></p>' +
-					'<p><label>Action:</label><input type="text" v-model="nat.action"/></p>' +
-					'<p><label>Comment:</label><input type="text" v-model="nat.comment"/></p>' +
-					'<p><label>Rules:</label><input type="text" v-model="nat.rules"/></p>' +
-				'</section>' +
-				'</div>',
-})
-
-Vue.component('mangle-form', {
-	computed: {
-		mangle: function(){
-			return this.$store.state.mangle;
-		},
-		editing: function(){
-			return this.$store.state.editing;
-		},
-	},
-	template: '<div>' +
-				'<header>{{ editing ? \'Editing\' : \'New\' }} Mangle</header>' +
-				'<section>' +
-					'<p><label>Chain:</label><input type="text" v-model="mangle.chain"/></p>' +
-					'<p><label>Action:</label><input type="text" v-model="mangle.action"/></p>' +
-					'<p><label>Comment:</label><input type="text" v-model="mangle.comment"/></p>' +
-					'<p><label>Rules:</label><input type="text" v-model="mangle.rules"/></p>' +
 				'</section>' +
 				'</div>',
 })
@@ -550,9 +545,9 @@ Vue.component('item-form', {
 				'<button type="button" class="close" @click="close"></button>' +
 				'<form method="post" @submit.prevent="save">' +
 				'<board-form v-if="activeTab == 0"></board-form>' +
-				'<filter-form v-if="activeTab == 1"></filter-form>' +
-				'<nat-form v-if="activeTab == 2"></nat-form>' +
-				'<mangle-form v-if="activeTab == 3"></mangle-form>' +
+				'<rule-form v-if="activeTab == 1"></rule-form>' +
+				'<rule-form rule-type="nat" v-if="activeTab == 2"></rule-form>' +
+				'<rule-form rule-type="mangle" v-if="activeTab == 3"></rule-form>' +
 				'<address-list-form v-if="activeTab == 4"></address-list-form>' +
 				'<layer7-protocol-form v-if="activeTab == 5"></layer7-protocol-form>' +
 				'<section class="buttons"><button type="submit">Save</button></section>' +
@@ -610,9 +605,9 @@ Vue.component('board-picker', {
 	template: '<aside class="board-picker" :class="{ showing: chooseBoards }">' +
 				'<button type="button" class="close" @click="close"></button>' +
 				'<header>Choose Boards</header>' +
-				'<ul>' +
+				'<section><ul>' +
 					'<li v-for="b in boards"><input type="checkbox" v-model="b.checked" :id="b.name"/><label :for="b.name">{{ b.name }} [{{ b.ip }}]</label></li>' +
-				'</ul>' +
+				'</ul></section>' +
 				'<section class="buttons"><button type="button" @click="process">Process</button></section>' +
 			'</aside>',
 })

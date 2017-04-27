@@ -67,7 +67,7 @@ class Mikrotik extends Controller
 		foreach($proto as $k => $v){
 			$proto[$k]->checked = false;
 		}
-		return ['layer7-protocols' => $proto];
+		return ['layer-7-protocols' => $proto];
 	}
 	
 	public function import_filter_rules($rb){
@@ -397,7 +397,7 @@ class Mikrotik extends Controller
 						array_push($old, $rule_id);
 					} else {
 						array_push($new, $rule_id);
-						$this->rb->addFilerRule($find);
+						$this->rb->addFilterRule($find);
 					}
 				}
 			}
@@ -853,6 +853,54 @@ class Mikrotik extends Controller
 		return ['board' => $board];
 	}
 	
+	public function save_filter_rules(Request $req){
+		$data = $req->only(['chain', 'action', 'comment', 'rules']);
+		
+		$filter = new \App\FilterRule();
+		$filter->chain = $data['chain'];
+		$filter->action = $data['action'];
+		$filter->comment = $data['comment'];
+		$filter->rules = json_encode($data['rules']);
+		$filter->save();
+		
+		$filter->rules = $data['rules'];
+		$filter->checked = false;
+		
+		return ['filter' => $filter];
+	}
+	
+	public function save_nat(Request $req){
+		$data = $req->only(['chain', 'action', 'comment', 'rules']);
+		
+		$nat = new \App\NAT();
+		$nat->chain = $data['chain'];
+		$nat->action = $data['action'];
+		$nat->comment = $data['comment'];
+		$nat->rules = json_encode($data['rules']);
+		$nat->save();
+		
+		$nat->rules = $data['rules'];
+		$nat->checked = false;
+		
+		return ['nat' => $nat];
+	}
+	
+	public function save_mangle(Request $req){
+		$data = $req->only(['chain', 'action', 'comment', 'rules']);
+		
+		$mangle = new \App\Mangle();
+		$mangle->chain = $data['chain'];
+		$mangle->action = $data['action'];
+		$mangle->comment = $data['comment'];
+		$mangle->rules = json_encode($data['rules']);
+		$mangle->save();
+		
+		$mangle->rules = $data['rules'];
+		$mangle->checked = false;
+		
+		return ['mangle' => $mangle];
+	}
+	
 	public function save_address_list(Request $req){
 		$data = $req->only(['list', 'address', 'timeout', 'comment']);
 		
@@ -862,6 +910,8 @@ class Mikrotik extends Controller
 		$addr->timeout = $data['timeout'];
 		$addr->comment = $data['comment'];
 		$addr->save();
+		
+		$addr->checked = false;
 		
 		return ['addressList' => $addr];
 	}
@@ -874,6 +924,8 @@ class Mikrotik extends Controller
 		$proto->regexp = $data['regexp'];
 		$proto->comment = $data['comment'];
 		$proto->save();
+		
+		$proto->checked = false;
 		
 		return ['layer7Protocol' => $proto];
 	}
@@ -894,6 +946,68 @@ class Mikrotik extends Controller
 		$board->update($data);
 		
 		return ['board' => $board->first()];
+	}
+	
+	public function update_filter_rules(Request $req){
+		$data = $req->only(['id', 'chain', 'action', 'comment', 'rules']);
+		
+		$filter = \App\FilterRule::where(['id' => $data['id']]);
+		unset($data['id']);
+		$data['rules'] = json_encode($data['rules']);
+		$filter->update($data);
+		
+		$filter = $filter->first();
+		$filter->rules = json_decode($filter->rules);
+		
+		return ['filter' => $filter];
+	}
+	
+	public function update_nat(Request $req){
+		$data = $req->only(['id', 'chain', 'action', 'comment', 'rules']);
+		
+		$nat = \App\NAT::where(['id' => $data['id']]);
+		unset($data['id']);
+		$data['rules'] = json_encode($data['rules']);
+		$nat->update($data);
+		
+		$nat = $nat->first();
+		$nat->rules = json_decode($nat->rules);
+		
+		return ['nat' => $nat];
+	}
+	
+	public function update_mangle(Request $req){
+		$data = $req->only(['id', 'chain', 'action', 'comment', 'rules']);
+		
+		$mangle = \App\Mangle::where(['id' => $data['id']]);
+		unset($data['id']);
+		$data['rules'] = json_encode($data['rules']);
+		$mangle->update($data);
+		
+		$mangle = $mangle->first();
+		$mangle->rules = json_decode($mangle->rules);
+		
+		return ['mangle' => $mangle];
+	}
+	
+	public function update_address_list(Request $req){
+		$data = $req->only(['id', 'list', 'address', 'timeout', 'comment']);
+		
+		$addr = \App\AddressList::where(['id' => $data['id']]);
+		unset($data['id']);
+		$addr->update($data);
+		
+		return ['addressList' => $addr->first()];
+	}
+	
+	public function update_layer7_protocol(Request $req){
+		$data = $req->only(['id', 'name', 'regexp', 'comment']);
+		
+		$proto = \App\Layer7Protocol::where(['id' => $data['id']]);
+		unset($data['id']);
+		$proto->update($data);
+		
+		return ['layer7Protocol' => $proto->first()];
 	}
 	
 	public function urls(){

@@ -317,7 +317,6 @@ docReady(function(){
 				state[val.type].ruleValue = '';
 			},
 			removeRule: function(state, val){
-				console.log(val);
 				var obj = {}
 				for(prop in state[val.type].rules){
 					if (prop != val.key){						
@@ -339,6 +338,10 @@ docReady(function(){
 		data: {
 			boardAction: '',
 			editItem: undefined,
+			jobType: '',
+			jobCount: 0,
+			jobDone: 0,
+			watchJob: false,
 		},
 		computed: {
 			navigation: {
@@ -475,28 +478,20 @@ docReady(function(){
 				this.activePage = 1;
 				this.editing = false;
 				this.showForm = false;
-				switch (newValue){
-					default:
-					case 0:
-						this.loadData('boards');
-						break;
-					case 1:
-						this.loadData('filters');
-						break;
-					case 2:
-						this.loadData('nat');
-						break;
-					case 3:
-						this.loadData('mangle');
-						break;
-					case 4:
-						this.loadData('address-lists');
-						break;
-					case 5:
-						this.loadData('layer7-protocols');
-						break;
+				this.loadData(this.tabName);
+			},
+			jobDone: function(newValue){
+				if (this.watchJob){
+					if (newValue == this.jobCount && this.jobType == 'pull'){
+						this.watchJob = false;
+						this.loadData(this.tabName);
+					}
+					if (newValue == this.jobCount && this.jobType == 'push'){
+						this.watchJob = false;
+						alert('Push finished.')
+					}
 				}
-			}
+			},
 		},
 		methods: {
 			loadUrls: function(){
@@ -605,6 +600,8 @@ docReady(function(){
 									if (['checked', 'id'].indexOf(prop) !== -1){
 									} else if (prop == 'fields'){
 										t[prop] = this[type][prop];
+									} else if (this[type][prop] == undefined){
+										t[prop] = '';
 									} else if (this[type][prop].constructor === Object){
 										t[prop] = {};
 									} else {
@@ -623,7 +620,9 @@ docReady(function(){
 								} else {
 									this.editItem = this.selectedItems[0];
 									for(prop in this.editItem){
-										this[type][prop] = this.editItem[prop];
+										if (this[type].hasOwnProperty(prop) || prop == 'id'){
+											this[type][prop] = this.editItem[prop];
+										}
 									}
 									this[type].ruleName = '';
 									this[type].ruleValue = '';
@@ -632,8 +631,12 @@ docReady(function(){
 								}
 								break;
 							case 'delete':
-								this.boardAction = 'delete';
-								this.chooseBoards = true;
+								if (this.selectedItems.length == 0){
+									alert('Please select the item you want to edit');
+								} else {
+									this.boardAction = 'delete';
+									this.chooseBoards = true;
+								}
 								break;
 							case 'pull':
 								this.boardAction = 'pull';
@@ -662,12 +665,20 @@ docReady(function(){
 				if (type == 'layer-7-protocol'){
 					type = 'layer7Protocol';
 				}
+
+				var data = {};
+				for(prop in this[type]){
+					if (prop != 'ruleName' && prop != 'ruleValue' && prop != 'fields'){
+						data[prop] = this[type][prop];
+					}
+				}
+
 				if (this.editing){
 					errand({
 						url: this.tabName + '/update',
 						json: true,
 						method: 'post',
-						data: dataPool.state[type],
+						data: data,
 					}).success(function(resp){
 						if (resp[type]){
 							console.log(resp[type]);
@@ -687,7 +698,7 @@ docReady(function(){
 						url: this.tabName + '/save',
 						json: true,
 						method: 'post',
-						data: dataPool.state[type],
+						data: data,
 					}).success(function(resp){
 						if (resp[type]){
 							_self.items.push(resp[type]);
@@ -758,15 +769,18 @@ docReady(function(){
 						if (tab == 'filters'){
 							tab = 'filter-rules';
 						}
+						this.jobType = 'pull';
+						this.jobCount = boards.length;
+						this.jobDone = 0;
+						this.watchJob = true;
 						boards.forEach(function(brd, idx, arr){
 							errand({
 								url: 'pull/' + tab + '/' + brd.name,
 								json: true,
-								method: 'post',
-								data: {push: toPush},
 							}).success(function(resp){
-								console.log(resp);
+								_self.jobDone++;
 							}).error(function(resp){
+								_self.jobDone++;
 								console.log(resp);
 							})
 						})
@@ -776,6 +790,10 @@ docReady(function(){
 						this.selectedItems.forEach(function(itm, idx, arr){
 							toPush.push(itm.id);
 						})
+						this.jobType = 'push';
+						this.jobCount = boards.length;
+						this.jobDone = 0;
+						this.watchJob = true;
 						boards.forEach(function(brd, idx, arr){
 							errand({
 								url: 'push/' + _self.tabName + '/' + brd.name,
@@ -783,8 +801,9 @@ docReady(function(){
 								method: 'post',
 								data: {push: toPush},
 							}).success(function(resp){
-								console.log(resp);
+								_self.jobDone++;
 							}).error(function(resp){
+								_self.jobDone++;
 								console.log(resp);
 							})
 						})

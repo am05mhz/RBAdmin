@@ -60,5 +60,32 @@ class AuthServiceProvider extends ServiceProvider
 			}
         });
 		
+		Gate::define('add-rules', function ($user) {
+			$roleauth = $user->roles('MBP')->first()->menus()->where('menu', 'Mikrotik Add/Edit Rules')->first();
+			$userauth = $user->menus()->where('menu', 'Mikrotik Add/Edit Rules')->first();
+			if ($roleauth or $userauth) {
+				return true;
+			}
+			return false;
+		});
+		
+		Gate::define('edit-rules', function ($user) {
+			$roleauth = $user->roles('MBP')->first()->menus()->where('menu', 'Mikrotik Add/Edit Rules')->first();
+			$userauth = $user->menus()->where('menu', 'Mikrotik Add/Edit Rules')->first();
+			if ($roleauth or $userauth) {
+				return true;
+			}
+			return false;
+		});
+		
+		Gate::define('delete-rules', function ($user) {
+			$roleauth = $user->roles('MBP')->first()->menus()->where('menu', 'Mikrotik Delete Rules')->first();
+			$userauth = $user->menus()->where('menu', 'Mikrotik Delete Rules')->first();
+			if ($roleauth or $userauth) {
+				return true;
+			}
+			return false;
+		});
+		
 	}
 }

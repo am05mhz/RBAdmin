@@ -20,7 +20,7 @@ $app->get('/filters', 'Mikrotik@filter_rules');
 $app->get('/nat', 'Mikrotik@nat');
 $app->get('/mangle', 'Mikrotik@mangle');
 $app->get('/address-lists', 'Mikrotik@address_lists');
-$app->get('/layer7-protocols', 'Mikrotik@layer7_protocols');
+$app->get('/layer-7-protocols', 'Mikrotik@layer7_protocols');
 
 $app->get('/pull/filter-rules/{rb}', 'Mikrotik@import_filter_rules');
 $app->get('/pull/nat/{rb}', 'Mikrotik@import_nat');
