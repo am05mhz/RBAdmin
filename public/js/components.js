@@ -276,7 +276,7 @@ Vue.component('paging', {
 			}
 		},
 		keyword: function(){
-			return this.$store.state.keyword;
+			return this.$store.state.keyword.toLowerCase();
 		},
 		filteredItems: function(){
 			var _self = this;
@@ -308,7 +308,7 @@ Vue.component('paging', {
 			});
 		},
 		pages: function(){
-			return Math.ceil(this.filteredItems.length / 20);
+			return Math.max(1, Math.ceil(this.$store.state.items.length / 20));
 		},
 		activePage: {
 			get: function(){
@@ -380,7 +380,7 @@ Vue.component('list', {
 			return this.$store.state.activeTab;
 		},
 		keyword: function(){
-			return this.$store.state.keyword;
+			return this.$store.state.keyword.toLowerCase();
 		},
 		filteredItems: function(){
 			var _self = this;
@@ -416,7 +416,7 @@ Vue.component('list', {
 			return this.filteredItems.slice(offset, offset + 20);
 		},
 		pages: function(){
-			return Math.ceil(this.$store.state.items.length / 20);
+			return Math.max(1, Math.ceil(this.$store.state.items.length / 20));
 		},
 		activePage: function(){
 			return this.$store.state.activePage;

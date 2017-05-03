@@ -531,7 +531,7 @@ class Mikrotik extends Controller
 			$old = [];
 			$fail = [];
 			foreach($push['push'] as $addr_id){
-				$addr = \App\AddressList::where('id', $mangle_id)->first();
+				$addr = \App\AddressList::where('id', $addr_id)->first();
 				if ($addr){
 					$find['list'] = $addr->list;
 					$find['address'] = $addr->address;
@@ -845,7 +845,12 @@ class Mikrotik extends Controller
 		$board->ip = $data['ip'];
 		$board->user = $data['user'];
 		$board->password = base64_encode($iv . openssl_encrypt($data['password'], 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv));
-		$board->save();
+
+		try{
+			$board->save();
+		} catch(\Illuminate\Database\QueryException $ex){
+			return ['error' => 'Duplicate board'];
+		}
 
 		unset($board->password);
 		$board->checked = false;
@@ -943,7 +948,11 @@ class Mikrotik extends Controller
 			$data['password'] = base64_encode($iv . openssl_encrypt($data['password'], 'AES-128-CTR', config('app.key'), OPENSSL_RAW_DATA, $iv));
 		}
 		
-		$board->update($data);
+		try{
+			$board->update($data);
+		} catch(\Illuminate\Database\QueryException $ex){
+			return ['error' => 'Duplicate board'];
+		}
 		
 		return ['board' => $board->first()];
 	}

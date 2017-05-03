@@ -262,13 +262,13 @@ docReady(function(){
 								for(p in row[prop]){
 									if (row[prop][p] != undefined){
 										if (row[prop][p].constructor == String){
-											if (row[prop][p].toLowerCase().indexOf(state.keyword) != -1){
+											if (row[prop][p].toLowerCase().indexOf(state.keyword.toLowerCase()) != -1){
 												found = true;
 											}
 										}
 									}
 								}
-							} else if (row[prop].toLowerCase().indexOf(state.keyword) != -1){
+							} else if (row[prop].toLowerCase().indexOf(state.keyword.toLowerCase()) != -1){
 								found = true;
 							}
 						}
@@ -744,8 +744,8 @@ docReady(function(){
 							}
 							_self.editItem = undefined;
 							_self.showForm = false;
-						} else {
-							
+						} else if (resp.error){
+							alert(resp.error);
 						}
 					}).error(function(resp){
 						
@@ -760,8 +760,8 @@ docReady(function(){
 						if (resp[type]){
 							_self.items.push(resp[type]);
 							_self.showForm = false;
-						} else {
-							
+						} else if (resp.error){
+							alert(resp.error);
 						}
 					}).error(function(resp){
 						
