@@ -3,12 +3,21 @@ Vue.component('navigation', {
 		items: function(){
 			return this.$store.state.navigation;
 		},
+		keyword: {
+			get: function(){
+				return this.$store.state.keyword;
+			},
+			set: function(newValue){
+				this.$store.commit('setKeyword', newValue);
+			}
+		},
 	},
 	template: '<nav>' +
 				'<div class="nav-toggle"></div>' +
 				'<ul>' +
 					'<li v-for="it in items"><a :href="it.url">{{ it.label }}</a></li>' +
 				'</ul>' +
+				'<div class="nav-search"><input type="text" v-model="keyword"></div>' +
 			'</nav>',
 })
 
@@ -79,14 +88,9 @@ Vue.component('board-item', {
 
 Vue.component('board-header', {
 	computed: {
-		selectedItems: function(){
-			return this.$store.state.items.filter(function(row){
-				return row.checked;
-			})
-		},
 		allSelected: {
 			get: function(){
-				return (this.selectedItems.length == this.$store.state.items.length) && (this.$store.state.items.length > 0);
+				return this.$store.getters.allSelected;
 			},
 			set: function(newValue){
 				this.$store.commit('selectAll', newValue);
@@ -126,14 +130,9 @@ Vue.component('rule-item', {
 
 Vue.component('rule-header', {
 	computed: {
-		selectedItems: function(){
-			return this.$store.state.items.filter(function(row){
-				return row.checked;
-			})
-		},
 		allSelected: {
 			get: function(){
-				return (this.selectedItems.length == this.$store.state.items.length) && (this.$store.state.items.length > 0);
+				return this.$store.getters.allSelected;
 			},
 			set: function(newValue){
 				this.$store.commit('selectAll', newValue);
@@ -174,14 +173,9 @@ Vue.component('address-list-item', {
 
 Vue.component('address-list-header', {
 	computed: {
-		selectedItems: function(){
-			return this.$store.state.items.filter(function(row){
-				return row.checked;
-			})
-		},
 		allSelected: {
 			get: function(){
-				return (this.selectedItems.length == this.$store.state.items.length) && (this.$store.state.items.length > 0);
+				return this.$store.getters.allSelected;
 			},
 			set: function(newValue){
 				this.$store.commit('selectAll', newValue);
@@ -221,14 +215,9 @@ Vue.component('layer7-protocol-item', {
 
 Vue.component('layer7-protocol-header', {
 	computed: {
-		selectedItems: function(){
-			return this.$store.state.items.filter(function(row){
-				return row.checked;
-			})
-		},
 		allSelected: {
 			get: function(){
-				return (this.selectedItems.length == this.$store.state.items.length) && (this.$store.state.items.length > 0);
+				return this.$store.getters.allSelected;
 			},
 			set: function(newValue){
 				this.$store.commit('selectAll', newValue);
@@ -286,8 +275,40 @@ Vue.component('paging', {
 					return 5;
 			}
 		},
+		keyword: function(){
+			return this.$store.state.keyword;
+		},
+		filteredItems: function(){
+			var _self = this;
+			return this.$store.state.items.filter(function(row){
+				var found = false;
+				if (_self.keyword == ''){
+					return true;
+				}
+				for(prop in row){
+					if (row[prop] != undefined){
+						if (prop == 'id' || prop == 'checked'){
+							
+						} else if (row[prop].constructor == Object){
+							for(p in row[prop]){
+								if (row[prop][p] != undefined){
+									if (row[prop][p].constructor == String){
+										if (row[prop][p].toLowerCase().indexOf(_self.keyword) != -1){
+											found = true;
+										}
+									}
+								}
+							}
+						} else if (row[prop].toLowerCase().indexOf(_self.keyword) != -1){
+							found = true;
+						}
+					}
+				}
+				return found;
+			});
+		},
 		pages: function(){
-			return Math.ceil(this.$store.state.items.length / 20);
+			return Math.ceil(this.filteredItems.length / 20);
 		},
 		activePage: {
 			get: function(){
@@ -304,7 +325,13 @@ Vue.component('paging', {
 			for (i = 1; i <= maxLeft; i++){
 				pgs.push(i);
 			}
+			if (maxLeft == 4 && this.activePage > 5){
+				pgs.push('...');
+			}
 			pgs.push(this.activePage);
+			if (minRight == this.pages - 3 && this.activePage < this.pages - 4){
+				pgs.push('...');
+			}
 			for (i = minRight; i <= this.pages; i++){
 				pgs.push(i);
 			}
@@ -336,6 +363,9 @@ Vue.component('paging', {
 			this.$store.commit('setActivePage', p);
 		},
 		goto: function(page){
+			if (page == '...'){
+				return;
+			}
 			if (page < 1 || page > this.pages){
 				return;
 			}
@@ -349,9 +379,41 @@ Vue.component('list', {
 		activeTab: function(){
 			return this.$store.state.activeTab;
 		},
+		keyword: function(){
+			return this.$store.state.keyword;
+		},
+		filteredItems: function(){
+			var _self = this;
+			return this.$store.state.items.filter(function(row){
+				var found = false;
+				if (_self.keyword == ''){
+					return true;
+				}
+				for(prop in row){
+					if (row[prop] != undefined){
+						if (prop == 'id' || prop == 'checked'){
+							
+						} else if (row[prop].constructor == Object){
+							for(p in row[prop]){
+								if (row[prop][p] != undefined){
+									if (row[prop][p].constructor == String){
+										if (row[prop][p].toLowerCase().indexOf(_self.keyword) != -1){
+											found = true;
+										}
+									}
+								}
+							}
+						} else if (row[prop].toLowerCase().indexOf(_self.keyword) != -1){
+							found = true;
+						}
+					}
+				}
+				return found;
+			});
+		},
 		items: function(){
 			var offset = (this.activePage - 1) * 20;
-			return this.$store.state.items.slice(offset, offset + 20);
+			return this.filteredItems.slice(offset, offset + 20);
 		},
 		pages: function(){
 			return Math.ceil(this.$store.state.items.length / 20);

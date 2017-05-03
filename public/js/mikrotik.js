@@ -14,6 +14,7 @@ docReady(function(){
 			],
 			activeTab: 0,
 			items: [],
+			keyword: '',
 			activePage: 1,
 			loading: false,
 			editing: false,
@@ -246,6 +247,47 @@ docReady(function(){
 			},
 			chooseBoards: false,
 		},
+		getters: {
+			filteredItems: function(state){
+				return state.items.filter(function(row){
+					var found = false;
+					if (state.keyword == ''){
+						return true;
+					}
+					for(prop in row){
+						if (row[prop] != undefined){
+							if (prop == 'id' || prop == 'checked'){
+								
+							} else if (row[prop].constructor == Object){
+								for(p in row[prop]){
+									if (row[prop][p] != undefined){
+										if (row[prop][p].constructor == String){
+											if (row[prop][p].toLowerCase().indexOf(state.keyword) != -1){
+												found = true;
+											}
+										}
+									}
+								}
+							} else if (row[prop].toLowerCase().indexOf(state.keyword) != -1){
+								found = true;
+							}
+						}
+					}
+					if (!found){
+						row.checked = false;
+					}
+					return found;
+				});
+			},
+			selectedItems: function(state){
+				return state.items.filter(function(row){
+					return row.checked;
+				})
+			},
+			allSelected: function(state){
+				return (dataPool.getters.filteredItems.length == dataPool.getters.selectedItems.length) && (dataPool.getters.filteredItems.length > 0);
+			},
+		},
 		mutations: {
 			setNavigation: function(state, val){
 				state.navigation = val;
@@ -257,7 +299,7 @@ docReady(function(){
 				state.items = val;
 			},
 			selectAll: function(state, val){
-				if (Math.ceil(state.items.length / 20) > 1){
+				if (Math.ceil(dataPool.getters.filteredItems.length / 20) > 1){
 					var txt = '';
 					if (val){
 						txt = 'This will select all items in other pages as well';
@@ -266,7 +308,7 @@ docReady(function(){
 					}
 					alert(txt);
 				}
-				state.items.forEach(function(item, idx, arr){
+				dataPool.getters.filteredItems.forEach(function(item, idx, arr){
 					item.checked = val;
 				});
 			},
@@ -275,6 +317,9 @@ docReady(function(){
 			},
 			setActivePage: function(state, val){
 				state.activePage = val;
+			},
+			setKeyword: function(state, val){
+				state.keyword = val;
 			},
 			setLoading: function(state, val){
 				state.loading = val;
@@ -396,6 +441,14 @@ docReady(function(){
 					dataPool.commit('setActivePage', newValue);
 				}
 			},
+			keyword: {
+				get: function(){
+					return dataPool.state.keyword;
+				},
+				set: function(newValue){
+					dataPool.commit('setKeyword', newValue);
+				}
+			},
 			tools: function(){
 				return dataPool.state.tools;
 			},
@@ -475,16 +528,20 @@ docReady(function(){
 		watch: {
 			activeTab: function(newValue){
 				this.items = [];
-				this.activePage = 1;
+				this.keyword = '';
 				this.editing = false;
 				this.showForm = false;
 				this.loadData(this.tabName);
+			},
+			keyword: function(newValue){
+				this.activePage = 1;
 			},
 			jobDone: function(newValue){
 				if (this.watchJob){
 					if (newValue == this.jobCount && this.jobType == 'pull'){
 						this.watchJob = false;
 						this.loadData(this.tabName);
+						alert('Pull finished.')
 					}
 					if (newValue == this.jobCount && this.jobType == 'push'){
 						this.watchJob = false;

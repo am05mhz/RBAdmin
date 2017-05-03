@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('style')
+<link rel="stylesheet" href="{{ url('css/icons.css') }}"/>
 <link rel="stylesheet" href="{{ url('css/mikrotik.css') }}"/>
 @endsection
 
