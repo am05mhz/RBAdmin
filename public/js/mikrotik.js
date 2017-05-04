@@ -16,6 +16,8 @@ docReady(function(){
 			items: [],
 			keyword: '',
 			activePage: 1,
+			doFilter: false,
+			filterTimer: undefined,
 			loading: false,
 			editing: false,
 			showForm: false,
@@ -246,14 +248,20 @@ docReady(function(){
 				comment: '',
 			},
 			chooseBoards: false,
+			boardAction: '',
 		},
 		getters: {
 			filteredItems: function(state){
-				return state.items.filter(function(row){
-					var found = false;
+				if (!state.doFilter || state.keyword == '' || state.items.length == 0){
 					if (state.keyword == ''){
-						return true;
+						state.items.forEach(function(val, key, arr){
+							delete val.visible;
+						});
 					}
+					return state.keyword != '' ? state.items.filter(function(row){ return row.visible === undefined ? true : row.visible }) : state.items;
+				}
+				state.doFilter = false;
+				return state.items.filter(function(row){
 					for(prop in row){
 						if (row[prop] != undefined){
 							if (prop == 'id' || prop == 'checked'){
@@ -263,20 +271,23 @@ docReady(function(){
 									if (row[prop][p] != undefined){
 										if (row[prop][p].constructor == String){
 											if (row[prop][p].toLowerCase().indexOf(state.keyword.toLowerCase()) != -1){
-												found = true;
+												row.visible = true;
+												return true;
 											}
 										}
 									}
 								}
-							} else if (row[prop].toLowerCase().indexOf(state.keyword.toLowerCase()) != -1){
-								found = true;
+							} else if (row[prop].constructor == String){
+								if (row[prop].toLowerCase().indexOf(state.keyword.toLowerCase()) != -1){
+									row.visible = true;
+									return true;
+								}
 							}
 						}
 					}
-					if (!found){
-						row.checked = false;
-					}
-					return found;
+					row.visible = false;
+					row.checked = false;
+					return false;
 				});
 			},
 			selectedItems: function(state){
@@ -286,6 +297,12 @@ docReady(function(){
 			},
 			allSelected: function(state){
 				return (dataPool.getters.filteredItems.length == dataPool.getters.selectedItems.length) && (dataPool.getters.filteredItems.length > 0);
+			},
+			pages: function(state){
+				return Math.max(1, Math.ceil(dataPool.getters.filteredItems.length / 20));
+			},
+			activePage: function(state){
+				return state.activePage;
 			},
 		},
 		mutations: {
@@ -319,6 +336,16 @@ docReady(function(){
 				state.activePage = val;
 			},
 			setKeyword: function(state, val){
+				if (state.filterTimer){
+					clearTimeout(state.filterTimer);
+					state.filterTimer = undefined;
+				}
+				if (val != ''){
+					state.filterTimer = setTimeout(function(){
+						state.doFilter = true;
+						state.filterTimer = undefined;
+					}, 500);
+				}
 				state.keyword = val;
 			},
 			setLoading: function(state, val){
@@ -351,6 +378,9 @@ docReady(function(){
 			setChooseBoards: function(state, val){
 				state.chooseBoards = val;
 			},
+			setBoardAction: function(state, val){
+				state.boardAction = val;
+			},
 			addRule: function(state, val){
 				var obj = {};
 				for(prop in state[val.type].rules){
@@ -381,7 +411,6 @@ docReady(function(){
 			this.loadData('boards');
 		},
 		data: {
-			boardAction: '',
 			editItem: undefined,
 			jobType: '',
 			jobCount: 0,
@@ -395,6 +424,14 @@ docReady(function(){
 				},
 				set: function(newValue){
 					dataPool.commit('setNavigation', newValue);
+				},
+			},
+			boardAction: {
+				get: function(){
+					return dataPool.state.boardAction;
+				},
+				set: function(newValue){
+					dataPool.commit('setBoardAction', newValue);
 				},
 			},
 			tabs: function(){
@@ -690,7 +727,7 @@ docReady(function(){
 								break;
 							case 'delete':
 								if (this.selectedItems.length == 0){
-									alert('Please select the item you want to edit');
+									alert('Please select the item you want to delete');
 								} else {
 									this.boardAction = 'delete';
 									this.chooseBoards = true;
@@ -774,15 +811,21 @@ docReady(function(){
 					alert('Please select the item you want to delete');
 				} else {
 					var txt = 'Are you sure you want to delete the selected items?';
-					if (type != 'boards'){
-						txt = 'Are you sure you want to delete the selected items from the Router Boards?';
+					if (type != 'boards' && boards.length > 0){
+						txt = 'Are you sure you want to delete the selected items from the selected Router Boards?';
+					} else if (type != 'boards'){
+						txt = 'You have not selected a Router Board, the selected item will only be removed from the database, proceed?';
 					}
 					if (confirm(txt)){
+						console.log(boards);
 						var toDelete = [], _self = this;
 						this.selectedItems.forEach(function(item, idx, arr){
 							toDelete.push(item.id);
 						});
 						if (isVarTypeOf(boards, Array)){
+							if (boards.length == 0){
+								boards.push({name: 'dbonly'});
+							}
 							boards.forEach(function(brd, idx, arr){
 								errand({
 									url: type + '/delete/' + brd.name,

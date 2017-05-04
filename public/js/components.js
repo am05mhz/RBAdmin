@@ -1,6 +1,8 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 Vue.component('navigation', {
 	computed: {
-		items: function(){
+		navs: function(){
 			return this.$store.state.navigation;
 		},
 		keyword: {
@@ -15,7 +17,7 @@ Vue.component('navigation', {
 	template: '<nav>' +
 				'<div class="nav-toggle"></div>' +
 				'<ul>' +
-					'<li v-for="it in items"><a :href="it.url">{{ it.label }}</a></li>' +
+					'<li v-for="nav in navs"><a :href="nav.url">{{ nav.label }}</a></li>' +
 				'</ul>' +
 				'<div class="nav-search"><input type="text" v-model="keyword"></div>' +
 			'</nav>',
@@ -23,7 +25,7 @@ Vue.component('navigation', {
 
 Vue.component('tabs', {
 	computed: {
-		items: function(){
+		tabs: function(){
 			return this.$store.state.tabs;
 		},
 		activeTab: {
@@ -36,18 +38,18 @@ Vue.component('tabs', {
 		},
 	},
 	template: '<ul id="tabs">' +
-				'<li v-for="it in items" :class="items[activeTab] == it ? \'active\' : \'\'" @click="tabClick(it)">{{ it }}</li>' +
+				'<li v-for="tab in tabs" :class="tabs[activeTab] == tab ? \'active\' : \'\'" @click="tabClick(tab)">{{ tab }}</li>' +
 			'</ul>',
 	methods: {
 		tabClick: function(tab){
-			this.activeTab = this.items.indexOf(tab);
+			this.activeTab = this.tabs.indexOf(tab);
 		},
 	},
 })
 
 Vue.component('tools', {
 	computed: {
-		items: function(){
+		tools: function(){
 			return this.$store.state.tools;
 		},
 		activeTab: function(){
@@ -55,7 +57,7 @@ Vue.component('tools', {
 		},
 	},
 	template: '<ul id="tools">' +
-				'<li v-for="it in items[activeTab]" @click="toolClick(it)">{{ it }}</li>' +
+				'<li v-for="tool in tools[activeTab]" @click="toolClick(tool)">{{ tool }}</li>' +
 			'</ul>',
 	methods: {
 		toolClick: function(tool){
@@ -259,6 +261,12 @@ Vue.component('loading', {
 })
 
 Vue.component('paging', {
+	props: {
+		pages: {
+			type: Number,
+			default: 1,
+		}
+	},
 	computed: {
 		activeTab: function(){
 			return this.$store.state.activeTab;
@@ -278,46 +286,11 @@ Vue.component('paging', {
 		keyword: function(){
 			return this.$store.state.keyword.toLowerCase();
 		},
-		filteredItems: function(){
-			var _self = this;
-			return this.$store.state.items.filter(function(row){
-				var found = false;
-				if (_self.keyword == ''){
-					return true;
-				}
-				for(prop in row){
-					if (row[prop] != undefined){
-						if (prop == 'id' || prop == 'checked'){
-							
-						} else if (row[prop].constructor == Object){
-							for(p in row[prop]){
-								if (row[prop][p] != undefined){
-									if (row[prop][p].constructor == String){
-										if (row[prop][p].toLowerCase().indexOf(_self.keyword) != -1){
-											found = true;
-										}
-									}
-								}
-							}
-						} else if (row[prop].toLowerCase().indexOf(_self.keyword) != -1){
-							found = true;
-						}
-					}
-				}
-				return found;
-			});
-		},
-		pages: function(){
-			return Math.max(1, Math.ceil(this.filteredItems.length / 20));
-		},
-		activePage: {
-			get: function(){
-				return this.$store.state.activePage;
-			},
+		activePage: _extends({
 			set: function(newValue){
 				this.$store.commit('setActivePage', newValue);
 			},
-		},
+		}, (0, Vuex.mapGetters)({get: 'activePage'})),
 		pageList: function(){
 			var pgs = [], maxLeft = this.activePage - 1, minRight = this.activePage + 1;
 			maxLeft = maxLeft > 4 ? 4 : maxLeft;
@@ -337,7 +310,7 @@ Vue.component('paging', {
 			}
 			return pgs;
 		},
-	},
+	}, 
 	template: '<tr class="paging">' +
 				'<td :colspan="colspan">' +
 					'<button :disabled="activePage == 1" @click="goto(1)">First</button>' +
@@ -375,51 +348,16 @@ Vue.component('paging', {
 })
 
 Vue.component('list', {
-	computed: {
+	computed: _extends({
 		activeTab: function(){
 			return this.$store.state.activeTab;
 		},
 		keyword: function(){
 			return this.$store.state.keyword.toLowerCase();
 		},
-		filteredItems: function(){
-			var _self = this;
-			return this.$store.state.items.filter(function(row){
-				var found = false;
-				if (_self.keyword == ''){
-					return true;
-				}
-				for(prop in row){
-					if (row[prop] != undefined){
-						if (prop == 'id' || prop == 'checked'){
-							
-						} else if (row[prop].constructor == Object){
-							for(p in row[prop]){
-								if (row[prop][p] != undefined){
-									if (row[prop][p].constructor == String){
-										if (row[prop][p].toLowerCase().indexOf(_self.keyword) != -1){
-											found = true;
-										}
-									}
-								}
-							}
-						} else if (row[prop].toLowerCase().indexOf(_self.keyword) != -1){
-							found = true;
-						}
-					}
-				}
-				return found;
-			});
-		},
 		items: function(){
 			var offset = (this.activePage - 1) * 20;
 			return this.filteredItems.slice(offset, offset + 20);
-		},
-		pages: function(){
-			return Math.max(1, Math.ceil(this.filteredItems.length / 20));
-		},
-		activePage: function(){
-			return this.$store.state.activePage;
 		},
 		loading: function(){
 			return this.$store.state.loading;
@@ -452,7 +390,7 @@ Vue.component('list', {
 					return 'layer7-protocol-item';
 			}
 		},
-	},
+	}, (0, Vuex.mapGetters)(['filteredItems', 'pages', 'activePage'])),
 	template: '<table><thead>' + 
 				'<tr :is="header"></tr>' +
 				'</thead><tbody v-if="loading">'+
@@ -460,7 +398,7 @@ Vue.component('list', {
 				'</tbody><tbody>' +
 				'<tr :is="listItem" v-for="it in items" :item="it"></tr>' +
 				'</tbody><tfoot v-if="pages > 1">' +
-				'<tr is="paging"></tr>' +
+				'<tr is="paging" :pages="pages"></tr>' +
 				'</tfoot></table>',
 })
 
@@ -630,6 +568,9 @@ Vue.component('board-picker', {
 		return {boards: []}
 	},
 	computed: {
+		boardAction: function(){
+			return this.$store.state.boardAction;
+		},
 		chooseBoards: function(){
 			return this.$store.state.chooseBoards;
 		},
@@ -657,7 +598,7 @@ Vue.component('board-picker', {
 			this.$store.commit('setChooseBoards', false);
 		},
 		process: function(){
-			if (this.selectedBoards.length == 0){
+			if (this.selectedBoards.length == 0 && this.boardAction != 'delete'){
 				alert('Please select the boards you want to process');
 				return;
 			}

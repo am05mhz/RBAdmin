@@ -612,6 +612,12 @@ class Mikrotik extends Controller
 	
 	public function delete_filters(Request $req, $rb){
 		$filters = $req->only('del');
+		
+		if ($rb == 'dbonly'){
+			\App\FilterRule::whereIn('id', $filters['del'])->delete();
+			return ['success' => true, 'result' => ['del' => count($filters['del']), 'fail' => 0]];
+		}
+		
 		$board = \App\Board::where('name', $rb)->first();
 		
 		if ($board){
@@ -642,13 +648,13 @@ class Mikrotik extends Controller
 				}
 				$exists = $this->rb->getFilterRules($find);
 				if (count($exists) == 1){
-					//$this->rb->removeFilterRule(['.id' => $exists[0]['.id']]);
+					$this->rb->removeFilterRule(['.id' => $exists[0]['.id']]);
 					array_push($del, $filter->id);
 				} else {
 					array_push($fail, $filter->id);
 				}
 			}
-			//$data->delete();
+			$data->delete();
 			return ['success' => true, 'result' => ['del' => $del, 'fail' => $fail]];
 		} else {
 			return ['error' => 'Board not found'];
@@ -657,6 +663,12 @@ class Mikrotik extends Controller
 	
 	public function delete_nat(Request $req, $rb){
 		$nat = $req->only('del');
+		
+		if ($rb == 'dbonly'){
+			\App\NAT::whereIn('id', $nat['del'])->delete();
+			return ['success' => true, 'result' => ['del' => count($nat['del']), 'fail' => 0]];
+		}
+		
 		$board = \App\Board::where('name', $rb)->first();
 		
 		if ($board){
@@ -687,13 +699,13 @@ class Mikrotik extends Controller
 				}
 				$exists = $this->rb->getNAT($find);
 				if (count($exists) == 1){
-					//$this->rb->removeNAT(['.id' => $exists[0]['.id']]);
+					$this->rb->removeNAT(['.id' => $exists[0]['.id']]);
 					array_push($del, $n->id);
 				} else {
 					array_push($fail, $n->id);
 				}
 			}
-			//$data->delete();
+			$data->delete();
 			return ['success' => true, 'result' => ['del' => $del, 'fail' => $fail]];
 		} else {
 			return ['error' => 'Board not found'];
@@ -702,6 +714,12 @@ class Mikrotik extends Controller
 	
 	public function delete_mangle(Request $req, $rb){
 		$mangle = $req->only('del');
+		
+		if ($rb == 'dbonly'){
+			\App\Mangle::whereIn('id', $mangle['del'])->delete();
+			return ['success' => true, 'result' => ['del' => count($mangle['del']), 'fail' => 0]];
+		}
+		
 		$board = \App\Board::where('name', $rb)->first();
 		
 		if ($board){
@@ -732,21 +750,27 @@ class Mikrotik extends Controller
 				}
 				$exists = $this->rb->getMangle($find);
 				if (count($exists) == 1){
-					//$this->rb->removeMangle(['.id' => $exists[0]['.id']]);
+					$this->rb->removeMangle(['.id' => $exists[0]['.id']]);
 					array_push($del, $mgl->id);
 				} else {
 					array_push($fail, $mgl->id);
 				}
 			}
-			//$data->delete();
+			$data->delete();
 			return ['success' => true, 'result' => ['del' => $del, 'fail' => $fail]];
 		} else {
 			return ['error' => 'Board not found'];
 		}
 	}
 	
-	public function delete_address_lists(Request $req){
+	public function delete_address_lists(Request $req, $rb){
 		$addrs = $req->only('del');
+		
+		if ($rb == 'dbonly'){
+			\App\AddressList::whereIn('id', $addrs['del'])->delete();
+			return ['success' => true, 'result' => ['del' => count($addrs['del']), 'fail' => 0]];
+		}
+		
 		$board = \App\Board::where('name', $rb)->first();
 		
 		if ($board){
@@ -766,7 +790,7 @@ class Mikrotik extends Controller
 
 			$del = [];
 			$fail = [];
-			$data = \App\Mangle::whereIn('id', $addrs['del']);
+			$data = \App\AddressList::whereIn('id', $addrs['del']);
 			$list = $data->get();
 			foreach($list as $addr){
 				$find['list'] = $addr->list;
@@ -779,21 +803,27 @@ class Mikrotik extends Controller
 				}
 				$exists = $this->rb->getAddressLists($find);
 				if (count($exists) == 1){
-					//$this->rb->removeAddressList(['.id' => $exists[0]['.id']]);
+					$this->rb->removeAddressList(['.id' => $exists[0]['.id']]);
 					array_push($del, $addr->id);
 				} else {
 					array_push($fail, $addr->id);
 				}
 			}
-			//$data->delete();
+			$data->delete();
 			return ['success' => true, 'result' => ['del' => $del, 'fail' => $fail]];
 		} else {
 			return ['error' => 'Board not found'];
 		}
 	}
 	
-	public function delete_layer7_protocols(Request $req){
+	public function delete_layer7_protocols(Request $req, $rb){
 		$proto = $req->only('del');
+		
+		if ($rb == 'dbonly'){
+			\App\Layer7Protocol::whereIn('id', $proto['del'])->delete();
+			return ['success' => true, 'result' => ['del' => count($proto['del']), 'fail' => 0]];
+		}
+		
 		$board = \App\Board::where('name', $rb)->first();
 		
 		if ($board){
@@ -813,7 +843,7 @@ class Mikrotik extends Controller
 
 			$del = [];
 			$fail = [];
-			$data = \App\Mangle::whereIn('id', $proto['del']);
+			$data = \App\Layer7Protocol::whereIn('id', $proto['del']);
 			$list = $data->get();
 			foreach($list as $p){
 				$find['name'] = $p->name;
@@ -823,13 +853,13 @@ class Mikrotik extends Controller
 				}
 				$exists = $this->rb->getLayer7Protocols($find);
 				if (count($exists) == 1){
-					//$this->rb->removeLayer7Protocol(['.id' => $exists[0]['.id']]);
+					$this->rb->removeLayer7Protocol(['.id' => $exists[0]['.id']]);
 					array_push($del, $p->id);
 				} else {
 					array_push($fail, $p->id);
 				}
 			}
-			//$data->delete();
+			$data->delete();
 			return ['success' => true, 'result' => ['del' => $del, 'fail' => $fail]];
 		} else {
 			return ['error' => 'Board not found'];
@@ -838,6 +868,11 @@ class Mikrotik extends Controller
 	
 	public function save_board(Request $req){
 		$data = $req->only(['name', 'ip', 'user', 'password']);
+		
+		if (!$data['name'] or !$data['ip'] or !$data['user'] or !$data['password']){
+			return ['error' => 'All data are required'];
+		}
+		
 		$iv = openssl_random_pseudo_bytes(16);
 		
 		$board = new \App\Board();
@@ -861,6 +896,10 @@ class Mikrotik extends Controller
 	public function save_filter_rules(Request $req){
 		$data = $req->only(['chain', 'action', 'comment', 'rules']);
 		
+		if (!$data['chain'] or !$data['action'] or count($data['rules']) == 0){
+			return ['error' => 'Chain, Action, and Rules are required'];
+		}
+		
 		$filter = new \App\FilterRule();
 		$filter->chain = $data['chain'];
 		$filter->action = $data['action'];
@@ -876,6 +915,10 @@ class Mikrotik extends Controller
 	
 	public function save_nat(Request $req){
 		$data = $req->only(['chain', 'action', 'comment', 'rules']);
+		
+		if (!$data['chain'] or !$data['action'] or count($data['rules']) == 0){
+			return ['error' => 'Chain, Action, and Rules are required'];
+		}
 		
 		$nat = new \App\NAT();
 		$nat->chain = $data['chain'];
@@ -893,6 +936,10 @@ class Mikrotik extends Controller
 	public function save_mangle(Request $req){
 		$data = $req->only(['chain', 'action', 'comment', 'rules']);
 		
+		if (!$data['chain'] or !$data['action'] or count($data['rules']) == 0){
+			return ['error' => 'Chain, Action, and Rules are required'];
+		}
+		
 		$mangle = new \App\Mangle();
 		$mangle->chain = $data['chain'];
 		$mangle->action = $data['action'];
@@ -909,6 +956,10 @@ class Mikrotik extends Controller
 	public function save_address_list(Request $req){
 		$data = $req->only(['list', 'address', 'timeout', 'comment']);
 		
+		if (!$data['list'] or !$data['address']){
+			return ['error' => 'List and Address are required'];
+		}
+		
 		$addr = new \App\AddressList();
 		$addr->list = $data['list'];
 		$addr->address = $data['address'];
@@ -923,6 +974,10 @@ class Mikrotik extends Controller
 	
 	public function save_layer7_protocol(Request $req){
 		$data = $req->only(['name', 'regexp', 'comment']);
+		
+		if (!$data['name'] or !$data['regexp']){
+			return ['error' => 'Name and Regular Expression are required'];
+		}
 		
 		$proto = new \App\Layer7Protocol();
 		$proto->name = $data['name'];
@@ -1020,8 +1075,8 @@ class Mikrotik extends Controller
 	}
 	
 	public function urls(){
-		$urls = 'var navigation = ['
-			. '{url:"' . url('/') . '", label:"Home"},' . 
+		$urls = 'var navigation = [' .
+//				'{url:"' . url('/') . '", label:"Home"},' . 
 			']';
 		return $urls;
 	}
