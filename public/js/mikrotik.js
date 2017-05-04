@@ -585,6 +585,27 @@ docReady(function(){
 						this.watchJob = false;
 						alert('Push finished.')
 					}
+					if (newValue == this.jobCount && this.jobType == 'delete'){
+						var toDelete = [], _self = this;
+						this.selectedItems.forEach(function(item, idx, arr){
+							toDelete.push(item.id);
+						});
+						errand({
+							url: this.tabName + '/delete/db',
+							json: true,
+							data: {del: toDelete},
+						}).success(function(resp){
+							if (resp.success){
+								toDelete.forEach(function(itm, idx, arr){
+									_self.items.splice(_self.items.indexOf(itm), 1);
+								});
+							} else {
+								alert('Something happened, please try again');
+							}
+						}).error(function(resp){
+							console.log(resp);
+						});
+					}
 				}
 			},
 		},
@@ -817,15 +838,18 @@ docReady(function(){
 						txt = 'You have not selected a Router Board, the selected item will only be removed from the database, proceed?';
 					}
 					if (confirm(txt)){
-						console.log(boards);
 						var toDelete = [], _self = this;
 						this.selectedItems.forEach(function(item, idx, arr){
 							toDelete.push(item.id);
 						});
 						if (isVarTypeOf(boards, Array)){
 							if (boards.length == 0){
-								boards.push({name: 'dbonly'});
+								boards.push({name: 'db'});
 							}
+							this.jobType = 'delete';
+							this.jobCount = boards.length;
+							this.jobDone = 0;
+							this.watchJob = true;
 							boards.forEach(function(brd, idx, arr){
 								errand({
 									url: type + '/delete/' + brd.name,
@@ -833,9 +857,13 @@ docReady(function(){
 									data: {del: toDelete},
 								}).success(function(resp){
 									if (resp.success){
-										toDelete.forEach(function(itm, idx, arr){
-											_self.items.splice(_self.items.indexOf(itm), 1);
-										});
+										if (resp.db){
+											toDelete.forEach(function(itm, idx, arr){
+												_self.items.splice(_self.items.indexOf(itm), 1);
+											});
+										} else {
+											_self.jobDone++;
+										}
 									} else {
 										alert('Something happened, please try again');
 									}

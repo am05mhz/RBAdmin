@@ -387,6 +387,7 @@ class Mikrotik extends Controller
 					$find = json_decode($rule->rules, true);
 					unset($find['invalid']);
 					unset($find['dynamic']);
+					unset($find['disabled']);
 					$find['chain'] = $rule->chain;
 					$find['action'] = $rule->action;
 					if ($rule->comment){
@@ -434,6 +435,7 @@ class Mikrotik extends Controller
 					$find = json_decode($nat->rules, true);
 					unset($find['invalid']);
 					unset($find['dynamic']);
+					unset($find['disabled']);
 					$find['chain'] = $nat->chain;
 					$find['action'] = $nat->action;
 					if ($nat->comment){
@@ -487,6 +489,7 @@ class Mikrotik extends Controller
 					$find = json_decode($mangle->rules, true);
 					unset($find['invalid']);
 					unset($find['dynamic']);
+					unset($find['disabled']);
 					$find['chain'] = $mangle->chain;
 					$find['action'] = $mangle->action;
 					if ($mangle->comment){
@@ -613,9 +616,9 @@ class Mikrotik extends Controller
 	public function delete_filters(Request $req, $rb){
 		$filters = $req->only('del');
 		
-		if ($rb == 'dbonly'){
+		if ($rb == 'db'){
 			\App\FilterRule::whereIn('id', $filters['del'])->delete();
-			return ['success' => true, 'result' => ['del' => count($filters['del']), 'fail' => 0]];
+			return ['success' => true, 'result' => ['del' => count($filters['del']), 'fail' => 0, 'db' => true]];
 		}
 		
 		$board = \App\Board::where('name', $rb)->first();
@@ -641,6 +644,7 @@ class Mikrotik extends Controller
 			$list = $data->get();
 			foreach($list as $filter){
 				$find = json_decode($filter->rules, true);
+				unset($find['disabled']);
 				$find['chain'] = $filter->chain;
 				$find['action'] = $filter->action;
 				if ($filter->comment){
@@ -664,9 +668,9 @@ class Mikrotik extends Controller
 	public function delete_nat(Request $req, $rb){
 		$nat = $req->only('del');
 		
-		if ($rb == 'dbonly'){
+		if ($rb == 'db'){
 			\App\NAT::whereIn('id', $nat['del'])->delete();
-			return ['success' => true, 'result' => ['del' => count($nat['del']), 'fail' => 0]];
+			return ['success' => true, 'result' => ['del' => count($nat['del']), 'fail' => 0, 'db' => true]];
 		}
 		
 		$board = \App\Board::where('name', $rb)->first();
@@ -692,6 +696,7 @@ class Mikrotik extends Controller
 			$list = $data->get();
 			foreach($list as $n){
 				$find = json_decode($n->rules, true);
+				unset($find['disabled']);
 				$find['chain'] = $n->chain;
 				$find['action'] = $n->action;
 				if ($n->comment){
@@ -715,9 +720,9 @@ class Mikrotik extends Controller
 	public function delete_mangle(Request $req, $rb){
 		$mangle = $req->only('del');
 		
-		if ($rb == 'dbonly'){
+		if ($rb == 'db'){
 			\App\Mangle::whereIn('id', $mangle['del'])->delete();
-			return ['success' => true, 'result' => ['del' => count($mangle['del']), 'fail' => 0]];
+			return ['success' => true, 'result' => ['del' => count($mangle['del']), 'fail' => 0, 'db' => true]];
 		}
 		
 		$board = \App\Board::where('name', $rb)->first();
@@ -743,6 +748,7 @@ class Mikrotik extends Controller
 			$list = $data->get();
 			foreach($list as $mgl){
 				$find = json_decode($mgl->rules, true);
+				unset($find['disabled']);
 				$find['chain'] = $mgl->chain;
 				$find['action'] = $mgl->action;
 				if ($mgl->comment){
@@ -766,9 +772,9 @@ class Mikrotik extends Controller
 	public function delete_address_lists(Request $req, $rb){
 		$addrs = $req->only('del');
 		
-		if ($rb == 'dbonly'){
+		if ($rb == 'db'){
 			\App\AddressList::whereIn('id', $addrs['del'])->delete();
-			return ['success' => true, 'result' => ['del' => count($addrs['del']), 'fail' => 0]];
+			return ['success' => true, 'result' => ['del' => count($addrs['del']), 'fail' => 0, 'db' => true]];
 		}
 		
 		$board = \App\Board::where('name', $rb)->first();
@@ -809,7 +815,6 @@ class Mikrotik extends Controller
 					array_push($fail, $addr->id);
 				}
 			}
-			$data->delete();
 			return ['success' => true, 'result' => ['del' => $del, 'fail' => $fail]];
 		} else {
 			return ['error' => 'Board not found'];
@@ -819,9 +824,9 @@ class Mikrotik extends Controller
 	public function delete_layer7_protocols(Request $req, $rb){
 		$proto = $req->only('del');
 		
-		if ($rb == 'dbonly'){
+		if ($rb == 'db'){
 			\App\Layer7Protocol::whereIn('id', $proto['del'])->delete();
-			return ['success' => true, 'result' => ['del' => count($proto['del']), 'fail' => 0]];
+			return ['success' => true, 'result' => ['del' => count($proto['del']), 'fail' => 0, 'db' => true]];
 		}
 		
 		$board = \App\Board::where('name', $rb)->first();
