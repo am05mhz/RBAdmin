@@ -529,6 +529,7 @@ docReady(function(){
 			activeTab: function(newValue){
 				this.items = [];
 				this.keyword = '';
+				this.activePage = 1;
 				this.editing = false;
 				this.showForm = false;
 				this.loadData(this.tabName);

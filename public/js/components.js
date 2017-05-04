@@ -308,7 +308,7 @@ Vue.component('paging', {
 			});
 		},
 		pages: function(){
-			return Math.max(1, Math.ceil(this.$store.state.items.length / 20));
+			return Math.max(1, Math.ceil(this.filteredItems.length / 20));
 		},
 		activePage: {
 			get: function(){
@@ -416,7 +416,7 @@ Vue.component('list', {
 			return this.filteredItems.slice(offset, offset + 20);
 		},
 		pages: function(){
-			return Math.max(1, Math.ceil(this.$store.state.items.length / 20));
+			return Math.max(1, Math.ceil(this.filteredItems.length / 20));
 		},
 		activePage: function(){
 			return this.$store.state.activePage;
