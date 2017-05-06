@@ -1,4 +1,4 @@
-docReady(function(){
+x_x.on(window, 'ready', function(){
 	var runErrand;
 	var dataPool = new Vuex.Store({
 		state: {
@@ -590,7 +590,7 @@ docReady(function(){
 						this.selectedItems.forEach(function(item, idx, arr){
 							toDelete.push(item.id);
 						});
-						errand({
+						x_x.errand({
 							url: this.tabName + '/delete/db',
 							json: true,
 							data: {del: toDelete},
@@ -619,7 +619,7 @@ docReady(function(){
 					runErrand.cancel();
 				}
 				dataPool.commit('setLoading', true);
-				runErrand = errand({
+				runErrand = x_x.errand({
 					url: type,
 					json: true,
 					method: 'get'
@@ -642,7 +642,7 @@ docReady(function(){
 						if (tool.toLowerCase().indexOf('pull') != -1){
 							var _self = this;
 							this.selectedItems.forEach(function(item, idx, arr){
-								errand({
+								x_x.errand({
 									url: tool.replace(' ', '/').replace(/\s/g, '-').toLowerCase() + '/' + encodeURIComponent(item.name),
 									method: 'get',
 									json: true,
@@ -790,7 +790,7 @@ docReady(function(){
 				}
 
 				if (this.editing){
-					errand({
+					x_x.errand({
 						url: this.tabName + '/update',
 						json: true,
 						method: 'post',
@@ -810,7 +810,7 @@ docReady(function(){
 						
 					});
 				} else {
-					errand({
+					x_x.errand({
 						url: this.tabName + '/save',
 						json: true,
 						method: 'post',
@@ -842,7 +842,7 @@ docReady(function(){
 						this.selectedItems.forEach(function(item, idx, arr){
 							toDelete.push(item.id);
 						});
-						if (isVarTypeOf(boards, Array)){
+						if (x_x.isVarTypeOf(boards, Array)){
 							if (boards.length == 0){
 								boards.push({name: 'db'});
 							}
@@ -851,7 +851,7 @@ docReady(function(){
 							this.jobDone = 0;
 							this.watchJob = true;
 							boards.forEach(function(brd, idx, arr){
-								errand({
+								x_x.errand({
 									url: type + '/delete/' + brd.name,
 									json: true,
 									data: {del: toDelete},
@@ -872,7 +872,7 @@ docReady(function(){
 								});
 							});
 						} else {
-							errand({
+							x_x.errand({
 								url: type + '/delete',
 								json: true,
 								data: {del: toDelete},
@@ -903,7 +903,7 @@ docReady(function(){
 						this.jobDone = 0;
 						this.watchJob = true;
 						boards.forEach(function(brd, idx, arr){
-							errand({
+							x_x.errand({
 								url: 'pull/' + tab + '/' + brd.name,
 								json: true,
 							}).success(function(resp){
@@ -924,7 +924,7 @@ docReady(function(){
 						this.jobDone = 0;
 						this.watchJob = true;
 						boards.forEach(function(brd, idx, arr){
-							errand({
+							x_x.errand({
 								url: 'push/' + _self.tabName + '/' + brd.name,
 								json: true,
 								method: 'post',

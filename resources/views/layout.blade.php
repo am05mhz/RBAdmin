@@ -9,8 +9,7 @@
 	<link rel="stylesheet" href="{{ url('css/lib/ground.css') }}"/>
 	@yield('style')
 	
-	<script src="{{ url('js/lib/docready.js') }}"></script>
-	<script src="{{ url('js/lib/errand.min.js') }}"></script>
+	<script src="{{ url('js/lib/essentials.min.js') }}"></script>
 	<script src="{{ url('js/lib/moment.min.js') }}"></script>
 	<script src="{{ url('js/lib/numeral.min.js') }}"></script>
 	<script src="{{ url('js/lib/vue.js') }}"></script>

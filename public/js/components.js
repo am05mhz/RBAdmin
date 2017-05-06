@@ -1,5 +1,3 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 Vue.component('navigation', {
 	computed: {
 		navs: function(){
@@ -132,14 +130,11 @@ Vue.component('rule-item', {
 
 Vue.component('rule-header', {
 	computed: {
-		allSelected: {
-			get: function(){
-				return this.$store.getters.allSelected;
-			},
+		allSelected: x_x.extends({
 			set: function(newValue){
 				this.$store.commit('selectAll', newValue);
 			},
-		},
+		}, (0, Vuex.mapGetters)({get: 'allSelected'})),
 	},
 	template: '<tr>' +
 				'<th class="checkbox"><input type="checkbox" v-model="allSelected"/></th>' +
@@ -175,14 +170,11 @@ Vue.component('address-list-item', {
 
 Vue.component('address-list-header', {
 	computed: {
-		allSelected: {
-			get: function(){
-				return this.$store.getters.allSelected;
-			},
+		allSelected: x_x.extends({
 			set: function(newValue){
 				this.$store.commit('selectAll', newValue);
 			},
-		},
+		}, (0, Vuex.mapGetters)({get: 'allSelected'})),
 	},
 	template: '<tr>' +
 				'<th class="checkbox"><input type="checkbox" v-model="allSelected"/></th>' +
@@ -217,14 +209,11 @@ Vue.component('layer7-protocol-item', {
 
 Vue.component('layer7-protocol-header', {
 	computed: {
-		allSelected: {
-			get: function(){
-				return this.$store.getters.allSelected;
-			},
+		allSelected: x_x.extends({
 			set: function(newValue){
 				this.$store.commit('selectAll', newValue);
 			},
-		},
+		}, (0, Vuex.mapGetters)({get: 'allSelected'})),
 	},
 	template: '<tr>' +
 				'<th class="checkbox"><input type="checkbox" v-model="allSelected"/></th>' +
@@ -286,7 +275,7 @@ Vue.component('paging', {
 		keyword: function(){
 			return this.$store.state.keyword.toLowerCase();
 		},
-		activePage: _extends({
+		activePage: x_x.extends({
 			set: function(newValue){
 				this.$store.commit('setActivePage', newValue);
 			},
@@ -348,7 +337,7 @@ Vue.component('paging', {
 })
 
 Vue.component('list', {
-	computed: _extends({
+	computed: x_x.extends({
 		activeTab: function(){
 			return this.$store.state.activeTab;
 		},
@@ -582,7 +571,7 @@ Vue.component('board-picker', {
 	},
 	created: function(){
 		var _self = this;
-		errand({
+		x_x.errand({
 			url: 'boards',
 			json: true,
 		}).success(function(resp){
