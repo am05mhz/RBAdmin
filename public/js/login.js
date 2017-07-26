@@ -35,7 +35,7 @@ Vue.component('login-form', {
 	methods: {
 		formSubmit: function(){
 			var _self = this;
-			errand({
+			x_x.errand({
 					url: this.url,
 					method: this.method,
 					json: this.json,
@@ -57,7 +57,7 @@ Vue.component('login-form', {
 	},
 });
 
-docReady(function(){
+x_x.on(window, 'ready', function(){
 	var app = new Vue({
 		el: '#login'
 	})
